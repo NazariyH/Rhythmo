@@ -229,37 +229,17 @@ nav .vertical-search-form input[type="text"] {
     border-radius: 20px 0 0 20px;
 }
 
-
-
 nav .search-form button,
 nav .vertical-search-form button {
-    position: relative;
     width: 50px;
     height: 50px;
 
     background-color: #ffffff;
-    border-left: 1px #D3D3D3 solid;
-    color: #D3D3D3;
+    border-left: 1px #000000 solid;
+    color: #000000;
     border-radius: 0 20px 20px 0;
 
     cursor: pointer;
-
-    transition: all .3s ease-out;
-}
-
-nav .search-form button:hover,
-nav .vertical-search-form button:hover {
-    color: #000000;
-    border-left: 1px #000000 solid;
-}
-
-nav .search-form button svg,
-nav .vertical-search-form button svg {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-
-    transform: translateY(-50%);
 }
 
 nav .icons-menu ul li a svg,
