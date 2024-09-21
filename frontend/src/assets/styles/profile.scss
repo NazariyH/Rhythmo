@@ -6,6 +6,8 @@ div.section {
 
     div.info-section {
         width: 400px;
+        height: 100vh;
+        overflow: auto;
 
         border-right: .5px solid #000000;
 
@@ -68,6 +70,8 @@ div.section {
             padding: 10px;
 
             background-color: #fcf4ea;
+
+            margin-bottom: 30px;
         }
     }
 
