@@ -46,12 +46,13 @@ class OwnProfileView(APIView):
 
         request_data = request.data.copy()
         request_data['user'] = request.user.id
+
+        if request_data['profileImage'] == '':
+            request_data['profileImage'] = profile.profileImage
+
         serializer = ProfileSerializer(instance=profile, data=request_data)
         
         if serializer.is_valid():
             serializer.save()
-            return Response("Success", status=200)   
-        
-        for i in range(100):
-            print(serializer.errors)
+            return Response(status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

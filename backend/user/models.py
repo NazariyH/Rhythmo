@@ -24,7 +24,7 @@ class Profile(models.Model):
     gender = models.CharField(max_length=20, choices=GENDER, default='OTHERS')
 
     followers = models.ManyToManyField(User, related_name='following', blank=True)
-    profileImage = models.ImageField(upload_to='profile_pics', blank=True)
+    profileImage = models.ImageField(upload_to='profile_pics', blank=True, null=True)
 
     slug = models.SlugField(unique=True, blank=True)
 
