@@ -1,9 +1,16 @@
 <template>
   <div class="section">
-    <ProfileInfo :profileImage="profileImage" :username="username" :age="age" :bio="bio" :gender="gender" :followers="followers"/>
+    <ProfileInfo v-if="isAuthenticated && !profileNotExist" :profileImage="profileImage" :username="username" :age="age" :bio="bio"
+      :gender="gender" :followers="followers" />
+    <div v-if="isAuthenticated && !profileNotExist" class="list-of-playlists"></div>
 
-    <div class="list-of-playlists">
-      <!-- Add playlist rendering logic here -->
+    <div class="pofile-not-found" v-if="!isAuthenticated">
+      <h1>You're not authenticated.</h1>
+      <button><router-link :to="{ name: 'login' }">Log in</router-link></button>
+    </div>
+    <div class="pofile-not-found" v-if="profileNotExist">
+      <h1>You don't have an account</h1>
+      <button><router-link :to="{ name: 'profile-edit' }">Create</router-link></button>
     </div>
   </div>
 </template>
@@ -21,7 +28,10 @@ export default {
       bio: '',
       gender: '',
       followers: 0,
-      profileImage: ''
+      profileImage: '',
+
+      isAuthenticated: false,
+      profileNotExist: false,
     };
   },
   components: {
@@ -33,6 +43,7 @@ export default {
 
       if (token) {
         axios.defaults.headers.common['Authorization'] = 'Token ' + token
+        this.isAuthenticated = true
 
         try {
           const response = await axios.get('user/profile/')
@@ -46,6 +57,10 @@ export default {
           this.profileImage = `http://localhost:8000${profileData.profileImage}`
 
         } catch (error) {
+          if (error.status = 404) {
+            this.profileNotExist = true
+          } 
+
           console.error('Error fetching profile:', error.response ? error.response.data : error.message)
         }
       } else {
@@ -64,5 +79,32 @@ hr {
   border: 0.5px solid #c6c6c6;
   width: 100%;
   margin: 30px 0;
+}
+
+.section {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+}
+
+.section .pofile-not-found {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+.section .pofile-not-found button {
+  background-color: antiquewhite;
+  width: 150px;
+  height: 35px;
+  border-radius: 10px;
+
+  transition: all .3s ease-out;
+}
+
+.section .pofile-not-found button:hover {
+  background-color: #ffffff;
 }
 </style>

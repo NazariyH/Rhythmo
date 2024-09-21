@@ -85,11 +85,7 @@ export default {
             }
 
             try {
-                const response = await axios.post('token/login', formData, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+                const response = await axios.post('token/login', formData)
 
                 const token = response.data.auth_token
 

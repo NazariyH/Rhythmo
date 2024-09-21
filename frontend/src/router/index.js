@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/authentication/LoginView.vue'
 import SignupView from '@/views/authentication/SignupView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import ProfileEditView from '@/views/ProfileEditView.vue'
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: '/user/profile/',
     name: 'user-profile',
     component: ProfileView
+  },
+  {
+    path: '/user/profile/edit/',
+    name: 'profile-edit',
+    component: ProfileEditView
   }
 ]
 
