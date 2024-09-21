@@ -40,3 +40,18 @@ class OwnProfileView(APIView):
         serializer = ProfileSerializer(profile)
 
         return Response({"profile": serializer.data}, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        profile, created = Profile.objects.get_or_create(user=request.user)
+
+        request_data = request.data.copy()
+        request_data['user'] = request.user.id
+        serializer = ProfileSerializer(instance=profile, data=request_data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response("Success", status=200)   
+        
+        for i in range(100):
+            print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

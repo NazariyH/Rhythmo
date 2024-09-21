@@ -20,7 +20,7 @@ class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profile')
     fullName = models.CharField(max_length=100, default='NoName')
     age = models.IntegerField(validators=[MaxValueValidator(150), MinValueValidator(13)], blank=True, null=True)
-    bio = models.TextField(max_length=15000, blank=True, null=True)
+    bio = models.TextField(max_length=900, blank=True, null=True)
     gender = models.CharField(max_length=20, choices=GENDER, default='OTHERS')
 
     followers = models.ManyToManyField(User, related_name='following', blank=True)
