@@ -6,7 +6,7 @@
             </div>
             <div class="navbar-menu">
                 <ul>
-                    <li v-if="!isAuthenticated"><router-link to="/user/log-in">Log in</router-link></li>
+                    <li v-if="!isAuthenticated"><router-link :to="{ name: 'login' }">Log in</router-link></li>
                     <li v-else><button v-on:click="logout">Log out</button></li>
                 </ul>
             </div>
@@ -34,7 +34,7 @@
                     </router-link>
                 </li>
                 <li v-else>
-                    <router-link to="/user/log-in">Log in</router-link>
+                    <router-link :to="{ name: 'login' }">Log in</router-link>
                 </li>
                 <li>
                     <router-link>
@@ -71,7 +71,7 @@
 
             <div class="vertical-navbar-menu">
                 <ul>
-                    <li v-if="!isAuthenticated"><router-link to="/user/log-in">Log in</router-link></li>
+                    <li v-if="!isAuthenticated"><router-link :to="{ name: 'login' }">Log in</router-link></li>
                     <li v-else><button v-on:click="logout">Log out</button></li>
                 </ul>
             </div>
@@ -87,7 +87,7 @@
                         </router-link>
                     </li>
                     <li v-else>
-                        <router-link to="/user/log-in">Log in</router-link>
+                        <router-link :to="{ name: 'login' }">Log in</router-link>
                     </li>
                     <li>
                         <router-link>
@@ -144,7 +144,7 @@ export default {
         },
 
         async logout() {
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token')            
 
             axios
                 .post('token/logout/', {
@@ -153,6 +153,7 @@ export default {
                     }
                 })
                 .then(response => {
+                    
                     this.$store.commit('removeToken')
                     localStorage.removeItem('token')
                     localStorage.setItem('auth_status', false)

@@ -80,7 +80,7 @@
             <button type="submit">Sign up</button>
 
             <div>
-                <p>Already have account <router-link to="/user/log-in">Log in</router-link></p>
+                <p>Already have account <router-link :to="{ name: 'login' }">Log in</router-link></p>
             </div>
 
             <div v-if="errors" class="errors-block">

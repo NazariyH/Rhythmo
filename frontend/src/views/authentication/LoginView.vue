@@ -44,7 +44,7 @@
             <button type="submit">Log in</button>
 
             <div>
-                <p>Don't have an account? <router-link to="/user/sign-up">Let's get start</router-link></p>
+                <p>Don't have an account? <router-link :to="{ name: 'signup' }">Let's get start</router-link></p>
             </div>
 
             <div v-if="errors.length" class="errors-block">
