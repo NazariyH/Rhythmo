@@ -6,8 +6,12 @@
             </div>
             <div class="navbar-menu">
                 <ul>
-                    <li v-if="!isAuthenticated"><router-link :to="{ name: 'login' }">Log in</router-link></li>
-                    <li v-else><button v-on:click="logout">Log out</button></li>
+                    <li v-if="!isAuthenticated">
+                        <router-link :to="{ name: 'login' }">Log in</router-link>
+                    </li>
+                    <li v-else>
+                        <button v-on:click="logout">Log out</button>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -16,9 +20,9 @@
             <input class="form-control me-2" type="text" v-bind:placeholder="finalMessage">
             <button id="searchButton" type="submit">
                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
+                     width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                        d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                          d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
                 </svg>
             </button>
         </form>
@@ -28,8 +32,8 @@
                 <li v-if="isAuthenticated">
                     <router-link to="/user/profile">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-person-fill" viewBox="0 0 16 16">
-                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                             class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                         </svg>
                     </router-link>
                 </li>
@@ -39,10 +43,10 @@
                 <li>
                     <router-link>
                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                            viewBox="0 0 24 24">
+                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                             viewBox="0 0 24 24">
                             <path
-                                d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z" />
+                                d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z"/>
                         </svg>
                     </router-link>
                 </li>
@@ -62,17 +66,21 @@
                 <input class="form-control me-2" type="text" v-bind:placeholder="finalMessage">
                 <button id="searchButton" type="submit">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                            d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
+                              d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
                     </svg>
                 </button>
             </form>
 
             <div class="vertical-navbar-menu">
                 <ul>
-                    <li v-if="!isAuthenticated"><router-link :to="{ name: 'login' }">Log in</router-link></li>
-                    <li v-else><button v-on:click="logout">Log out</button></li>
+                    <li v-if="!isAuthenticated">
+                        <router-link :to="{ name: 'login' }">Log in</router-link>
+                    </li>
+                    <li v-else>
+                        <button v-on:click="logout">Log out</button>
+                    </li>
                 </ul>
             </div>
 
@@ -81,8 +89,8 @@
                     <li v-if="isAuthenticated">
                         <router-link to="/user/profile">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-person-fill" viewBox="0 0 16 16">
-                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                 class="bi bi-person-fill" viewBox="0 0 16 16">
+                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
                             </svg>
                         </router-link>
                     </li>
@@ -92,10 +100,10 @@
                     <li>
                         <router-link>
                             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                viewBox="0 0 24 24">
+                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                 viewBox="0 0 24 24">
                                 <path
-                                    d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z" />
+                                    d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z"/>
                             </svg>
                         </router-link>
                     </li>
@@ -130,7 +138,7 @@ export default {
         searchFieldAnimation() {
             this.finalMessage = ''
             let interval = 70
-            
+
 
             for (let i = 0; i < this.message.length * 2; i++) {
                 setTimeout(() => {
@@ -144,7 +152,7 @@ export default {
         },
 
         async logout() {
-            const token = localStorage.getItem('token')            
+            const token = localStorage.getItem('token')
 
             axios
                 .post('token/logout/', {
@@ -153,7 +161,7 @@ export default {
                     }
                 })
                 .then(response => {
-                    
+
                     this.$store.commit('removeToken')
                     localStorage.removeItem('token')
                     localStorage.setItem('auth_status', false)
@@ -165,7 +173,7 @@ export default {
                     this.$router.push('/user/log-in/')
                 })
                 .catch(error => {
-                    console.log(error);        
+                    console.log(error);
                 })
         }
     },
@@ -229,14 +237,14 @@ nav div .vertical-navbar-menu ul li {
 nav div .navbar-menu ul li a,
 nav div .vertical-navbar-menu ul li a,
 nav div .navbar-menu ul li button,
-nav div .vertical-navbar-menu ul li button  {
+nav div .vertical-navbar-menu ul li button {
     color: #000000;
 }
 
 nav div .navbar-menu ul li a::before,
 nav div .verical-navbar-menu ul li a::before,
 nav div .navbar-menu ul li button::before,
-nav div .verical-navbar-menu ul li button::before  {
+nav div .verical-navbar-menu ul li button::before {
     content: "";
 
     position: absolute;
@@ -254,7 +262,7 @@ nav div .verical-navbar-menu ul li button::before  {
 nav div .navbar-menu ul li:hover a::before,
 nav div .vertical-navbar-menu ul li:hover a::before,
 nav div .navbar-menu ul li:hover button::before,
-nav div .vertical-navbar-menu ul li:hover button::before  {
+nav div .vertical-navbar-menu ul li:hover button::before {
     width: 100%;
 }
 
@@ -307,7 +315,7 @@ nav .vertical-menu-btn {
     z-index: 3;
 }
 
-@media(max-width: 1200px) {
+@media (max-width: 1200px) {
 
     nav div .navbar-menu,
     nav .search-form,

@@ -1,5 +1,5 @@
 <template>
-    <div class="info-section">
+    <div id="info-section" class="info-section active">
         <div class="info-header">
             <div class="image-wrap">
                 <img :src="profileImage" alt="Profile Image" v-if="profileImage" />
@@ -47,7 +47,13 @@
 
 <script>
 export default {
-    props: ['profileImage', 'username', 'age', 'gender', 'bio', 'followers']
+    props: ['profileImage', 'username', 'age', 'gender', 'bio', 'followers'],
+    mounted() {
+        const infoPannel = document.getElementById('info-section');
+        setInterval(() => {
+            infoPannel.classList.remove('active');
+        }, 100)
+    }
 }
 </script>
 
