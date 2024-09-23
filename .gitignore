@@ -1,12 +1,12 @@
 # Django (inside rhythmo_django/)
-rhythmo_django/*.pyc
-rhythmo_django/__pycache__/
-rhythmo_django/media/
-rhythmo_django/staticfiles/
+backend/*.pyc
+backend/__pycache__/
+backend/media/
+backend/staticfiles/
 
 # Vue (inside rhythmo_vue/)
-rhythmo_vue/node_modules/
-rhythmo_vue/dist/
+frontend/node_modules/
+frontend/dist/
 
 # env
 /env/
