@@ -39,7 +39,7 @@ class OwnProfileView(APIView):
         profile = get_object_or_404(Profile, user=request.user.id)
         serializer = ProfileSerializer(profile)
 
-        return Response({"profile": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"profile": serializer.data, "is_current_user": True}, status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):
         profile, created = Profile.objects.get_or_create(user=request.user)
