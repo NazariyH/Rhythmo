@@ -36,7 +36,7 @@
             <hr>
         </div>
 
-        <div class="bio">
+        <div class="bio" v-if="bio">
             <p>{{ bio }}</p>
         </div>
 
