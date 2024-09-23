@@ -62,6 +62,7 @@ export default {
 .card {
     padding: 10px 30px;
     background-color: #ffffff;
+    margin: 5px 0;
 
     transition: all .3s ease-in-out;
 

@@ -4,27 +4,10 @@
                      :age="age" :bio="bio"
                      :gender="gender" :followers="followers"/>
         <div v-if="isAuthenticated && !profileNotExist" class="content-block">
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-            <Song :song="song"/>
-
+            <div v-if="loading" class="loading">
+                <span></span>
+            </div>
+            <Song v-for="song in songs" v-else :song="song"/>
         </div>
 
         <div class="pofile-not-found" v-if="!isAuthenticated">
@@ -61,16 +44,8 @@ export default {
             isAuthenticated: false,
             profileNotExist: false,
 
-            song: {
-                name: 'Blank Space',
-                author: 'Taylor Swift',
-                likes: 43022001,
-                views: 2441124230,
-                crated_on: 'October 24 2007',
-                album: '1989',
-                thumbnail: 'https://upload.wikimedia.org/wikipedia/en/f/f6/Taylor_Swift_-_1989.png',
-                song: 'https://open.spotify.com/track/1u8c2t2Cy7UBoG4ArRcF5g?si=be47af1a41fe4173',
-            },
+            songs: null,
+            loading: true,
         };
     },
     components: {
@@ -78,7 +53,7 @@ export default {
         Song,
     },
     methods: {
-        async fetchData() {
+        async fetchProfileData() {
             const token = localStorage.getItem('token')
 
             if (token) {
@@ -107,11 +82,29 @@ export default {
                 console.error('No authentication token found.')
             }
         },
-    },
-    mounted() {
-        this.fetchData()
 
-        this.$nextTick(() => {
+        async fetchSongData() {
+            const token = localStorage.getItem('token')
+
+            if (!token) {
+                console.log('Token not found')
+                return
+            }
+
+            try {
+                const response = await axios.get('song/', {
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    }
+                })
+
+                this.songs = response.data.songs
+            } catch(error) {
+                console.log(error)
+            }
+        },
+
+        startAnimation() {
             const songs = document.getElementsByClassName('card')
             const inputRange = document.getElementsByClassName('progres')
 
@@ -127,12 +120,27 @@ export default {
                     inputRangeArray[i].classList.remove('active')
                 }, 120 * i)
             })
+        }
+    },
+    mounted() {
+        this.fetchProfileData()
+        this.fetchSongData()
+
+        this.startAnimation()
+
+        this.$nextTick(() => {
+            setInterval(() => {
+                this.fetchSongData()
+                this.startAnimation()
+                this.loading = false
+            }, 3000)
+            this.startAnimation()
         })
     }
 }
 </script>
 
-<style>
+<style lang="scss">
 hr {
     border: 0.5px solid #c6c6c6;
     width: 100%;
@@ -168,5 +176,20 @@ hr {
 
 .content-block {
     width: 100%;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+
+    span {
+        width: 50px;
+        height: 50px;
+
+        border-radius: 50%;
+    }
 }
 </style>
