@@ -12,6 +12,13 @@
                     <li v-else>
                         <button v-on:click="logout">Log out</button>
                     </li>
+
+                    <li v-if="isAuthenticated">
+                        <router-link :to="{ name: 'add-song' }">Add song</router-link>
+                    </li>
+                    <li v-else>
+                        <router-link :to="{ name: 'login' }">Add song</router-link>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -80,6 +87,13 @@
                     </li>
                     <li v-else>
                         <button v-on:click="logout">Log out</button>
+                    </li>
+
+                    <li v-if="isAuthenticated">
+                        <router-link :to="{ name: 'add-song' }">Add song</router-link>
+                    </li>
+                    <li v-else>
+                        <router-link :to="{ name: 'login' }">Add song</router-link>
                     </li>
                 </ul>
             </div>

@@ -4,10 +4,7 @@
                      :age="age" :bio="bio"
                      :gender="gender" :followers="followers"/>
         <div v-if="isAuthenticated && !profileNotExist" class="content-block">
-            <div v-if="loading" class="loading">
-                <span></span>
-            </div>
-            <Song v-for="song in songs" v-else :song="song"/>
+            <Song v-for="song in songs" :song="song"/>
         </div>
 
         <div class="pofile-not-found" v-if="!isAuthenticated">
@@ -45,7 +42,6 @@ export default {
             profileNotExist: false,
 
             songs: null,
-            loading: true,
         };
     },
     components: {
@@ -124,18 +120,11 @@ export default {
     },
     mounted() {
         this.fetchProfileData()
-        this.fetchSongData()
 
-        this.startAnimation()
 
-        this.$nextTick(() => {
-            setInterval(() => {
-                this.fetchSongData()
-                this.startAnimation()
-                this.loading = false
-            }, 3000)
+        this.fetchSongData().then(() => {
             this.startAnimation()
-        })
+        });
     }
 }
 </script>
@@ -176,20 +165,5 @@ hr {
 
 .content-block {
     width: 100%;
-}
-
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    height: 100vh;
-
-    span {
-        width: 50px;
-        height: 50px;
-
-        border-radius: 50%;
-    }
 }
 </style>
