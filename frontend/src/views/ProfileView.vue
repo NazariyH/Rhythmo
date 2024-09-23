@@ -2,7 +2,7 @@
     <div class="section">
         <ProfileInfo v-if="isAuthenticated && !profileNotExist" :profileImage="profileImage" :username="username"
                      :age="age" :bio="bio"
-                     :gender="gender" :followers="followers"/>
+                     :gender="gender" :followers="followers" :is_current_user="is_current_user"/>
         <div v-if="isAuthenticated && !profileNotExist" class="content-block">
             <Song v-for="song in songs" :song="song"/>
         </div>
@@ -37,6 +37,7 @@ export default {
             gender: '',
             followers: 0,
             profileImage: '',
+            is_current_user: false,
 
             isAuthenticated: false,
             profileNotExist: false,
@@ -65,6 +66,7 @@ export default {
                     this.bio = profileData.bio
                     this.gender = profileData.gender
                     this.followers = profileData.followers.length
+                    this.is_current_user = response.data.is_current_user
                     this.profileImage = `${this.$store.getters.getBaseURL}${profileData.profileImage}`
 
                 } catch (error) {
@@ -165,5 +167,30 @@ hr {
 
 .content-block {
     width: 100%;
+}
+
+@media(max-width: 800px) {
+    .section {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        div.info-section {
+            overflow-y: visible !important;
+            height: auto !important;
+            margin-bottom: 50px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            border-right: none !important;
+        }
+
+        div.content-block {
+            overflow-y: visible !important;
+            height: auto !important;
+        }
+    }
 }
 </style>

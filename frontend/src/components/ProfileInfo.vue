@@ -10,7 +10,7 @@
             <div class="main-info">
                 <div>
                     <h1>{{ username }}</h1>
-                    <router-link :to="{ name: 'profile-edit' }">
+                    <router-link :to="{ name: 'profile-edit' }" v-if="is_current_user">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
                             <path
@@ -21,7 +21,7 @@
 
                 <div>
                     <p>Followers: {{ followers }}</p>
-                    <button>Follow</button>
+                    <button v-if="!is_current_user">Follow</button>
                 </div>
 
                 <hr>
@@ -47,10 +47,10 @@
 
 <script>
 export default {
-    props: ['profileImage', 'username', 'age', 'gender', 'bio', 'followers'],
+    props: ['profileImage', 'username', 'age', 'gender', 'bio', 'followers', 'is_current_user'],
     mounted() {
         const infoPannel = document.getElementById('info-section');
-        setInterval(() => {
+        setTimeout(() => {
             infoPannel.classList.remove('active');
         }, 100)
     }
