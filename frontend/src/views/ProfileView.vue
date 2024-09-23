@@ -113,13 +113,19 @@ export default {
 
         this.$nextTick(() => {
             const songs = document.getElementsByClassName('card')
+            const inputRange = document.getElementsByClassName('progres')
+
             const songArray = Array.from(songs)
+            const inputRangeArray = Array.from(inputRange)
 
             songArray.forEach((song, i) => {
-                console.log('afasfs')
                 setTimeout(() => {
                     song.classList.remove('active')
                 }, 80 * i)
+
+                setTimeout(() => {
+                    inputRangeArray[i].classList.remove('active')
+                }, 120 * i)
             })
         })
     }

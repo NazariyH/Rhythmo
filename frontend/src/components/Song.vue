@@ -19,7 +19,7 @@
                 </svg>
             </button>
 
-            <input type="range" value="0" id="progres">
+            <input type="range" value="0" class="progres active">
 
             <button class="like">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -128,6 +128,11 @@ export default {
 
             -webkit-appearance: none;
             background: linear-gradient(135deg, #FAEBD7, #FFF5E1, #F0E2D1);
+            transition: all .5s ease-in-out;
+
+            &.active {
+                transform: translateX(150%);
+            }
         }
 
         input[type="range"]::-webkit-slider-thumb {
