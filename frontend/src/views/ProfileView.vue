@@ -65,7 +65,7 @@ export default {
                     this.bio = profileData.bio
                     this.gender = profileData.gender
                     this.followers = profileData.followers.length
-                    this.profileImage = `http://localhost:8000${profileData.profileImage}`
+                    this.profileImage = `${this.$store.getters.getBaseURL}${profileData.profileImage}`
 
                 } catch (error) {
                     if (error.status = 404) {
@@ -102,7 +102,7 @@ export default {
 
         startAnimation() {
             const songs = document.getElementsByClassName('card')
-            const inputRange = document.getElementsByClassName('progres')
+            const inputRange = document.getElementsByClassName('progress')
 
             const songArray = Array.from(songs)
             const inputRangeArray = Array.from(inputRange)

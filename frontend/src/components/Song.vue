@@ -2,7 +2,7 @@
     <div class="card active">
         <div class="info">
             <div>
-                <img v-bind:src="song.thumbnail">
+                <img v-bind:src="song_thumbnail_url">
                 <div>
                     <h4>{{ song.name }}</h4>
                     <router-link to="">{{ song.author }}</router-link>
@@ -10,16 +10,32 @@
             </div>
         </div>
 
+        <audio class="song d-none" :data-songId="song.id" controls>
+            <source :src="song_url">
+        </audio>
+
         <div class="player">
-            <button class="play">
+            <button :data-songBtnId="song.id" class="play" v-if="!playing" v-on:click="playPause">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-play-fill" viewBox="0 0 16 16">
                     <path
                         d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
                 </svg>
             </button>
+            <button :data-songBtnId="song.id" class="play" v-else v-on:click="playPause">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-pause-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
+                </svg>
+            </button>
 
-            <input type="range" value="0" class="progres active">
+            <div>
+                <span>15:</span><span>50</span>
+            </div>
+
+            <input type="range" v-model="current_progress_value" value="0" class="progress active"
+                   :data-songProgressId="song.id" v-on:input="updateCurrentMusicTime">
 
             <button class="like">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -53,8 +69,53 @@
 export default {
     props: ["song"],
     data() {
-        return {}
+        return {
+            song_url: '',
+            song_thumbnail_url: '',
+
+            playing: false,
+            current_music: null,
+            current_progress: null,
+            current_progress_value: 0,
+        }
     },
+    methods: {
+        playPause(event) {
+            this.current_song_id = event.currentTarget.getAttribute('data-songBtnId')
+            if (!this.current_progress) this.current_progress = document.querySelector(`[data-songProgressId="${this.current_song_id}"]`)
+            this.current_music = document.querySelector(`[data-songId="${this.current_song_id}"]`)
+
+
+            this.playing ? this.current_music.pause() : this.current_music.play()
+
+            if (!this.playing) {
+                setInterval(() => {
+                    this.current_progress.value = Math.round(100 * this.current_music.currentTime / this.current_music.duration)
+                }, 1000)
+            }
+
+            this.playing = !this.playing
+        },
+
+        updateCurrentMusicTime(event) {
+            this.current_song_id = event.currentTarget.getAttribute('data-songProgressId')
+            this.current_music = document.querySelector(`[data-songId="${this.current_song_id}"]`)
+
+            this.current_music.currentTime = this.current_music.duration * event.currentTarget.value / 100
+        },
+    },
+    mounted() {
+        this.song_url = `${this.$store.getters.getBaseURL}${this.song.song}`
+        this.song_thumbnail_url = `${this.$store.getters.getBaseURL}${this.song.song_thumbnail}`
+
+
+        // if (this.current_progress) {
+        //     this.current_progress.onchange = function () {
+        //         this.current_music.play()
+        //         console.log('fasfasdf')
+        //     }
+        // }
+    }
 }
 </script>
 
@@ -149,6 +210,10 @@ export default {
 
     &.active {
         transform: translateX(100%);
+    }
+
+    .d-none {
+        display: none;
     }
 }
 </style>

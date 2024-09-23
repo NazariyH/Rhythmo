@@ -4,6 +4,7 @@ export default createStore({
     state: {
         token: '',
         isAuthenticated: false,
+        baseURL: 'http://localhost:8000',
     },
     mutations: {
         initializeStore(state) {
@@ -23,6 +24,9 @@ export default createStore({
             state.token = ''
             state.isAuthenticated = false
         }
+    },
+    getters: {
+        getBaseURL: state => state.baseURL,
     },
     actions: {},
     modules: {},
