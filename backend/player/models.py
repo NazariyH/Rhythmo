@@ -9,9 +9,9 @@ class Song(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='songs')
     name = models.CharField(max_length=100)
     song = models.FileField(upload_to='player/songs')
-    song_thumbnail = models.ImageField('player/thumbnails', blank=True, null=True)
+    song_thumbnail = models.ImageField(upload_to='player/thumbnails', blank=True, null=True)
 
-    crated_on = models.DateField(default=timezone.now)
+    created_on = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True)
 
     def __str__(self):

@@ -27,6 +27,9 @@ class CustomAuthToken(ObtainAuthToken):
 class ProfileView(APIView):
     def get(self, request, pk, *args, **kwargs):
         profile = get_object_or_404(Profile, user=pk)
+        for i in range(100):
+            print(profile)
+            
         serializer = ProfileSerializer(profile)
         
         return Response({"profile": serializer.data}, status=status.HTTP_200_OK)
