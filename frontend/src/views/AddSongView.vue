@@ -7,22 +7,86 @@
 
             <div class="input-block">
                 <label for="name">Name</label>
-                <input type="text" id="name">
+                <input type="text" id="name" v-model="name" required>
             </div>
 
             <div class="input-block buttons">
-                <label for="song">song</label>
-                <label for="thumbnail">image</label>
+                <label for="song" id="songBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-image" viewBox="0 0 16 16">
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                        <path
+                            d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z" />
+                    </svg>
+                </label>
 
-                <input type="file" id="thumbnail">
-                <input type="file" id="song">
+                <input type="file" id="song" v-on:input="onSongChange" required>
+
+                <label id="thumbnailBtn" for="thumbnail">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-image" viewBox="0 0 16 16">
+                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                        <path
+                            d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1z" />
+                    </svg>
+                </label>
+
+                <input type="file" id="thumbnail" v-on:input="onThumbnailChange">
+            </div>
+
+            <div class="input-block">
+                <button type="submit">Add</button>
             </div>
         </form>
     </div>
 </template>
 
 <script>
-export default {}
+import axios from 'axios'
+
+export default {
+    data() {
+        return {
+            name: '',
+            song: null,
+            image: null,
+        }
+    },
+    methods: {
+        async addSong() {
+            const data = new FormData()
+            const token = localStorage.getItem('token')
+
+            if (!token) {
+                console.log('Token not found')
+                return
+            }
+
+            data.append('name', this.name)
+            data.append('song', this.song)
+            data.append('song_thumbnail', this.image)
+
+            try {
+                const response = await axios.post('song/', data, {
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    }
+                })
+            } catch(error) {
+                console.log(error)
+            }
+        },
+
+        onSongChange(event) {
+            this.song = event.target.files[0]
+            
+        },
+
+        onThumbnailChange(event) {
+            this.image = event.target.files[0]
+        },
+    }
+}
 </script>
 
 <style lang="scss">
@@ -30,11 +94,53 @@ export default {}
 
 .input-block {
     &.buttons {
+        display: flex;
+        flex-direction: row !important;
+        justify-content: space-between;
+
+        label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            color: #000000;
+            background-color: #ffffff !important;
+            border: .5px solid #000000;
+            transition: all .3s ease-in-out;
+
+            border-radius: 20px;
+            width: 50%;
+            height: 30px;
+        }
+
+        label:hover {
+            background-color: #000000 !important;
+            color: #ffffff;
+        }
+
+        label#songBtn {
+            border-radius: 20px 0 0 20px;
+        }
+
+        label#thumbnailBtn {
+            border-radius: 0 20px 20px 0;
+        }
+
 
     }
 
     input[type="file"] {
         display: none;
+    }
+
+    button[type="submit"] {
+        background-color: #fcf4ea;
+        transition: all .3s ease-in-out;
+        color: #000000;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #ffffff;
     }
 }
 </style>

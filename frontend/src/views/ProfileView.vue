@@ -4,7 +4,7 @@
                      :age="age" :bio="bio"
                      :gender="gender" :followers="followers" :is_current_user="is_current_user"/>
         <div v-if="isAuthenticated && !profileNotExist" class="content-block">
-            <Song v-for="song in songs" :song="song"/>
+            <Song v-for="song in songs" :song="song" :is_current_user="is_current_user"/>
         </div>
 
         <div class="pofile-not-found" v-if="!isAuthenticated">

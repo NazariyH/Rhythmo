@@ -17,48 +17,56 @@
         <div class="player">
             <button :data-songBtnId="song.id" class="play" v-if="!playing" v-on:click="playPause">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-play-fill" viewBox="0 0 16 16">
+                    class="bi bi-play-fill" viewBox="0 0 16 16">
                     <path
-                        d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+                        d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393" />
                 </svg>
             </button>
             <button :data-songBtnId="song.id" class="play" v-else v-on:click="playPause">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-pause-fill" viewBox="0 0 16 16">
+                    class="bi bi-pause-fill" viewBox="0 0 16 16">
                     <path
-                        d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
+                        d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5" />
                 </svg>
             </button>
+        
 
             <div>
                 <span>15:</span><span>50</span>
             </div>
 
             <input type="range" v-model="current_progress_value" value="0" class="progress active"
-                   :data-songProgressId="song.id" v-on:input="updateCurrentMusicTime">
+                :data-songProgressId="song.id" v-on:input="updateCurrentMusicTime">
 
-            <button class="like">
+            <button class="like" v-if="!is_current_user">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                    class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
                     <path
-                        d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1"/>
+                        d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1" />
+                </svg>
+            </button>
+
+            <button class="trash" v-if="is_current_user" :data-songId="song.id" v-on:click="removeSong">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-trash-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                 </svg>
             </button>
 
             <button class="addToPlaylist">
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                     viewBox="0 0 24 24">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                     <path
-                        d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z"/>
+                        d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z" />
                 </svg>
             </button>
 
             <button>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                    class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                     <path
-                        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                        d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
                 </svg>
             </button>
         </div>
@@ -66,8 +74,10 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-    props: ["song"],
+    props: ["song", "is_current_user"],
     data() {
         return {
             song_url: '',
@@ -103,18 +113,21 @@ export default {
 
             this.current_music.currentTime = this.current_music.duration * event.currentTarget.value / 100
         },
+
+        async removeSong(event) {
+            const songId = event.currentTarget.getAttribute('data-songId')
+
+            try {
+                const response = await axios.delete(`song/remove/${songId}/`)
+                document.querySelector('.card').remove()                
+            } catch(error) {
+                console.log(error)
+            }
+        }
     },
     mounted() {
         this.song_url = `${this.$store.getters.getBaseURL}${this.song.song}`
         this.song_thumbnail_url = `${this.$store.getters.getBaseURL}${this.song.song_thumbnail}`
-
-
-        // if (this.current_progress) {
-        //     this.current_progress.onchange = function () {
-        //         this.current_music.play()
-        //         console.log('fasfasdf')
-        //     }
-        // }
     }
 }
 </script>
@@ -173,7 +186,9 @@ export default {
                 color: #795757;
             }
 
-            &.like, &.addToPlaylist {
+            &.like,
+            &.addToPlaylist,
+            &.trash {
                 margin-right: 10px;
             }
 
