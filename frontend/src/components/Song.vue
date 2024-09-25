@@ -1,5 +1,5 @@
 <template>
-    <div class="card active">
+    <div class="card active" :data-songBlockId="song.id">
         <div class="info">
             <div>
                 <img v-bind:src="song_thumbnail_url">
@@ -87,12 +87,13 @@ export default {
             current_music: null,
             current_progress: null,
             current_progress_value: 0,
+            current_progress_value: 0,
         }
     },
     methods: {
         playPause(event) {
             this.current_song_id = event.currentTarget.getAttribute('data-songBtnId')
-            if (!this.current_progress) this.current_progress = document.querySelector(`[data-songProgressId="${this.current_song_id}"]`)
+            this.current_progress = document.querySelector(`[data-songProgressId="${this.current_song_id}"]`)
             this.current_music = document.querySelector(`[data-songId="${this.current_song_id}"]`)
 
 
@@ -100,7 +101,9 @@ export default {
 
             if (!this.playing) {
                 setInterval(() => {
-                    this.current_progress.value = Math.round(100 * this.current_music.currentTime / this.current_music.duration)
+                    this.current_progress_value = Math.round(100 * this.current_music.currentTime / this.current_music.duration)
+                    this.current_progress.value = this.current_progress_value
+                    
                 }, 1000)
             }
 
@@ -119,7 +122,7 @@ export default {
 
             try {
                 const response = await axios.delete(`song/remove/${songId}/`)
-                document.querySelector('.card').remove()                
+                document.querySelector(`[data-songBlockId="${songId}"]`).remove()                
             } catch(error) {
                 console.log(error)
             }

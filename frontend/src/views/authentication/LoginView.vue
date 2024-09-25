@@ -1,16 +1,16 @@
 <template>
     <div class="container">
         <form v-on:submit.prevent="login">
-            <div class="form-title">
+            <div class="form-title input-block active">
                 <h3>Log in</h3>
             </div>
 
-            <div class="input-block">
+            <div class="input-block active">
                 <label for="username">Username</label>
                 <input type="text" v-model="username" id="username" required>
             </div>
 
-            <div class="input-block">
+            <div class="input-block active">
                 <label for="password">Password</label>
 
                 <div class="input-group flex-nowrap">
@@ -41,9 +41,11 @@
                 </div>
             </div>
 
-            <button type="submit">Log in</button>
+            <div class="input-block active">
+                <button type="submit">Log in</button>
+            </div>
 
-            <div>
+            <div class="input-block active">
                 <p>Don't have an account? <router-link :to="{ name: 'signup' }">Let's get start</router-link></p>
             </div>
 
@@ -78,6 +80,7 @@ export default {
             this.showPassword = !this.showPassword;
             this.passwordType = (this.passwordType === 'password') ? 'text' : 'password';
         },
+
         async login() {
             const formData = {
                 username: this.username,
@@ -113,9 +116,23 @@ export default {
             } catch (error) {
                 this.errors = error.response ? error.response.data : ['An unexpected error occurred']
             }
-        }
+        },
 
+        animateBlocks() {
+            
+            const blocks = document.getElementsByClassName('input-block')
+            const arrayBlocks = Array.from(blocks)
+
+            arrayBlocks.forEach((block, i) => {
+                setInterval(() => {
+                    block.classList.remove('active')
+                }, 100 * i)
+            })
+        }
     },
+    mounted() {
+        this.animateBlocks()
+    }
 }
 </script>
 

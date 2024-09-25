@@ -129,6 +129,7 @@
 
 <script>
 import axios from 'axios'
+import store from '@/store'
 
 export default {
     name: "Navbar",
@@ -167,6 +168,12 @@ export default {
 
         async logout() {
             const token = localStorage.getItem('token')
+            // axios.defaults.headers.common['Authorization'] = `Token ${store.state.token}`;
+
+            if (!token) {
+                console.log('Token not found')
+                return
+            }
 
             axios
                 .post('token/logout/', {
@@ -187,7 +194,17 @@ export default {
                     this.$router.push('/user/log-in/')
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log(error)
+
+                    this.$store.commit('removeToken')
+                    localStorage.removeItem('token')
+                    localStorage.setItem('auth_status', false)
+
+                    delete axios.defaults.headers.common['Authorization']
+
+                    this.isAuthenticated = false
+                    
+                    this.$router.push('/user/log-in/')
                 })
         }
     },

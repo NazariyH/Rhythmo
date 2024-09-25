@@ -1,10 +1,9 @@
 <template>
     <div class="section">
         <ProfileInfo v-if="isAuthenticated && !profileNotExist" :profileImage="profileImage" :username="username"
-                     :age="age" :bio="bio"
-                     :gender="gender" :followers="followers" :is_current_user="is_current_user"/>
+            :age="age" :bio="bio" :gender="gender" :followers="followers" :is_current_user="is_current_user" />
         <div v-if="isAuthenticated && !profileNotExist" class="content-block">
-            <Song v-for="song in songs" :song="song" :is_current_user="is_current_user"/>
+            <Song v-for="song in songs" :song="song" :is_current_user="is_current_user" />
         </div>
 
         <div class="pofile-not-found" v-if="!isAuthenticated">
@@ -97,7 +96,7 @@ export default {
                 })
 
                 this.songs = response.data.songs
-            } catch(error) {
+            } catch (error) {
                 console.log(error)
             }
         },
@@ -126,7 +125,7 @@ export default {
 
         this.fetchSongData().then(() => {
             this.startAnimation()
-        });
+        })
     }
 }
 </script>

@@ -1,21 +1,21 @@
 <template>
     <div class="container">
         <form v-on:submit.prevent="signup">
-            <div class="form-title">
+            <div class="form-title input-block active">
                 <h3 class="">Sign up</h3>
             </div>
 
-            <div class="input-block">
+            <div class="input-block active">
                 <label for="username">Username</label>
                 <input type="text" id="username" v-model="username" required>
             </div>
 
-            <div class="input-block">
+            <div class="input-block active">
                 <label for="email">Email</label>
                 <input type="email" id="email" v-model="email" required>
             </div>
 
-            <div class="input-block">
+            <div class="input-block active">
                 <label for="password">Password</label>
 
                 <div class="input-group">
@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <div class="input-block">
+            <div class="input-block active">
                 <label for="confirm-password">Confirm password</label>
 
                 <div class="input-group flex-nowrap">
@@ -77,9 +77,11 @@
                 </div>
             </div>
 
-            <button type="submit">Sign up</button>
+            <div class="input-block active">
+                <button type="submit">Sign up</button>
+            </div>
 
-            <div>
+            <div class="input-block active">
                 <p>Already have account <router-link :to="{ name: 'login' }">Log in</router-link></p>
             </div>
 
@@ -147,6 +149,21 @@ export default {
                     console.log(error)
                 })
         },
+
+        animateBlocks() {
+            
+            const blocks = document.getElementsByClassName('input-block')
+            const arrayBlocks = Array.from(blocks)
+
+            arrayBlocks.forEach((block, i) => {
+                setInterval(() => {
+                    block.classList.remove('active')
+                }, 100 * i)
+            })
+        }
+    },
+    mounted() {
+        this.animateBlocks()
     }
 }
 </script>

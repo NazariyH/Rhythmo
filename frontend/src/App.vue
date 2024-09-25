@@ -96,6 +96,8 @@ select {
 body {
   font-family: Arial, sans-serif;
   background-color: #fcf4ea;
+
+  overflow-x: hidden;
 }
 
 /* Ensure all elements inherit font color */
