@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '@/views/authentication/LoginView.vue'
 import SignupView from '@/views/authentication/SignupView.vue'
+import OwnProfileView from '@/views/OwnProfileView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import ProfileEditView from '@/views/ProfileEditView.vue'
 import AddSongView from '@/views/AddSongView.vue'
@@ -25,6 +26,11 @@ const routes = [
   {
     path: '/user/profile/',
     name: 'user-profile',
+    component: OwnProfileView
+  },
+  {
+    path: '/user/profile/1/',
+    name: 'profile',
     component: ProfileView
   },
   {

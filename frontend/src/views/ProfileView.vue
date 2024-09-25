@@ -1,22 +1,15 @@
 <template>
     <div class="section">
-        <ProfileInfo v-if="isAuthenticated && !profileNotExist" :profileImage="profileImage" :username="username"
+        <ProfileInfo v-if="!profileNotExist" :profileImage="profileImage" :username="username"
             :age="age" :bio="bio" :gender="gender" :followers="followers" :is_current_user="is_current_user" />
-        <div v-if="isAuthenticated && !profileNotExist" class="content-block">
+        
+        
+        <div v-if="!profileNotExist" class="content-block">
             <Song v-for="song in songs" :song="song" :is_current_user="is_current_user" />
         </div>
 
-        <div class="pofile-not-found" v-if="!isAuthenticated">
-            <h1>You're not authenticated.</h1>
-            <button>
-                <router-link :to="{ name: 'login' }">Log in</router-link>
-            </button>
-        </div>
         <div class="pofile-not-found" v-if="profileNotExist">
-            <h1>You don't have an account</h1>
-            <button>
-                <router-link :to="{ name: 'profile-edit' }">Create</router-link>
-            </button>
+            <h1>Profile with this id don't exist</h1>
         </div>
     </div>
 </template>
@@ -25,9 +18,14 @@
 import axios from 'axios'
 import ProfileInfo from '@/components/ProfileInfo.vue'
 import Song from '@/components/Song.vue'
+import Playlist from '@/components/Playlist.vue';
 
 export default {
-    name: 'Profile',
+    name: "Profile",
+    components: {
+        ProfileInfo,
+        Song,
+    },
     data() {
         return {
             username: '',
@@ -39,67 +37,40 @@ export default {
             is_current_user: false,
 
             isAuthenticated: false,
-            profileNotExist: false,
+            profileNotExist: true,
 
             songs: null,
-        };
-    },
-    components: {
-        ProfileInfo,
-        Song,
+            playlists: null,
+        }
     },
     methods: {
         async fetchProfileData() {
-            const token = localStorage.getItem('token')
-
-            if (token) {
-                axios.defaults.headers.common['Authorization'] = 'Token ' + token
-                this.isAuthenticated = true
-
-                try {
-                    const response = await axios.get('user/profile/')
-                    const profileData = response.data.profile
-
-                    this.username = profileData.fullName
-                    this.age = profileData.age
-                    this.bio = profileData.bio
-                    this.gender = profileData.gender
-                    this.followers = profileData.followers.length
-                    this.is_current_user = response.data.is_current_user
-                    this.profileImage = `${this.$store.getters.getBaseURL}${profileData.profileImage}`
-
-                } catch (error) {
-                    if (error.status = 404) {
-                        this.profileNotExist = true
-                    }
-
-                    console.error('Error fetching profile:', error.response ? error.response.data : error.message)
-                }
-            } else {
-                console.error('No authentication token found.')
-            }
-        },
-
-        async fetchSongData() {
-            const token = localStorage.getItem('token')
-
-            if (!token) {
-                console.log('Token not found')
-                return
-            }
-
             try {
-                const response = await axios.get('song/', {
-                    headers: {
-                        'Authorization': `Token ${token}`
-                    }
-                })
+                const response = await axios.get('user/profile/17/')
+                const profileData = response.data.profile
 
+                this.username = profileData.fullName
+                this.age = profileData.age
+                this.bio = profileData.bio
+                this.gender = profileData.gender
+                this.followers = profileData.followers.length
+                this.is_current_user = response.data.is_current_user
+                this.profileImage = `${this.$store.getters.getBaseURL}${profileData.profileImage}`
+                this.profileNotExist = false
+
+                
                 this.songs = response.data.songs
+                console.log(this.songs);
+
             } catch (error) {
-                console.log(error)
+                if (error.status = 404) {
+                    this.profileNotExist = false
+                }
+
+                console.error('Error fetching profile:', error.response ? error.response.data : error.message)
             }
         },
+
 
         startAnimation() {
             const songs = document.getElementsByClassName('card')
@@ -120,13 +91,10 @@ export default {
         }
     },
     mounted() {
-        this.fetchProfileData()
-
-
-        this.fetchSongData().then(() => {
+        this.fetchProfileData().then(() => {
             this.startAnimation()
         })
-    }
+    },
 }
 </script>
 
@@ -166,6 +134,14 @@ hr {
 
 .content-block {
     width: 100%;
+}
+
+.info-header {
+    width: 300px;
+
+    h1 {
+        text-align: start;
+    }
 }
 
 @media(max-width: 800px) {
