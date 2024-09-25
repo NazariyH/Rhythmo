@@ -21,3 +21,15 @@ class Song(models.Model):
         if not self.slug:
             self.slug = f'{slugify(self.name)}_{self.id}'
         super(Song, self).save(*args, **kwargs)
+
+class Playlist(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='playlists')
+    title = models.CharField(max_length=100)
+    description = models.CharField(max_length=250, blank=True)
+    created_on = models.DateTimeField(default=timezone.now)
+
+    song = models.ManyToManyField(Song, related_name='songs', blank=True, null=True)
+    playlist_thumbnail = models.ImageField(upload_to='player/playlist/thumbnails')
+
+    def __str__(self):
+        return self.title

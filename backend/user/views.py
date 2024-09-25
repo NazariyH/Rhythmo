@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404
+from player.models import Song
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import Profile
 from .serializers import ProfileSerializer
+from player.serializers import SongSerializer
 
 
 # Create your views here.
@@ -27,12 +29,19 @@ class CustomAuthToken(ObtainAuthToken):
 class ProfileView(APIView):
     def get(self, request, pk, *args, **kwargs):
         profile = get_object_or_404(Profile, user=pk)
-        for i in range(100):
-            print(profile)
-            
-        serializer = ProfileSerializer(profile)
+        songs_list = get_list_or_404(Song, author=pk)            
+
+
+        serializer_profile = ProfileSerializer(profile)
+        serializer_song = SongSerializer(songs_list, many=True)
+
+        is_current_user = False
+
+        if request.user == profile.user:
+            is_current_user = True
+
         
-        return Response({"profile": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"profile": serializer_profile.data, "is_current_user": is_current_user, "songs": serializer_song.data}, status=status.HTTP_200_OK)
             
 
 class OwnProfileView(APIView):
