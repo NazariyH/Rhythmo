@@ -144,4 +144,21 @@ nav {
     background-color: #9b9b9b !important;
   }
 }
+
+.section {
+  min-height: 100vh;
+
+  form {
+    width: 720px !important;
+    padding: 0 20px;
+  }
+}
+
+@media(max-width: 800px) {
+  .section {
+    form {
+      width: auto !important;
+    }
+  }
+}
 </style>

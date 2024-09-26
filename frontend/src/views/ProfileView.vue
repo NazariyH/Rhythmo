@@ -3,9 +3,14 @@
         <ProfileInfo v-if="!profileNotExist" :profileImage="profileImage" :username="username"
             :age="age" :bio="bio" :gender="gender" :followers="followers" :is_current_user="is_current_user" />
         
-        
-        <div v-if="!profileNotExist" class="content-block">
-            <Song v-for="song in songs" :song="song" :is_current_user="is_current_user" />
+        <div class="content-section">
+            <div v-if="!profileNotExist" class="playlist-block">
+                <Playlist v-for="playlist in playlists" :playlist="playlist" :is_current_user="is_current_user" />
+            </div>
+
+            <div v-if="!profileNotExist" class="content-block">
+                <Song v-for="song in songs" :song="song" :is_current_user="is_current_user" />
+            </div>
         </div>
 
         <div class="pofile-not-found" v-if="profileNotExist">
@@ -20,11 +25,13 @@ import ProfileInfo from '@/components/ProfileInfo.vue'
 import Song from '@/components/Song.vue'
 import Playlist from '@/components/Playlist.vue';
 
+
 export default {
     name: "Profile",
     components: {
         ProfileInfo,
         Song,
+        Playlist,
     },
     data() {
         return {
@@ -57,17 +64,23 @@ export default {
                 this.is_current_user = response.data.is_current_user
                 this.profileImage = `${this.$store.getters.getBaseURL}${profileData.profileImage}`
                 this.profileNotExist = false
-
-                
                 this.songs = response.data.songs
-                console.log(this.songs);
-
             } catch (error) {
                 if (error.status = 404) {
                     this.profileNotExist = false
                 }
 
                 console.error('Error fetching profile:', error.response ? error.response.data : error.message)
+            }
+        },
+
+        async fetchPlaylistData() {
+            try {
+                const response = await axios.get('playlist/')
+
+                this.playlists = response.data.playlists
+            } catch (error) {
+                console.log(error)
             }
         },
 
@@ -79,6 +92,9 @@ export default {
             const songArray = Array.from(songs)
             const inputRangeArray = Array.from(inputRange)
 
+            const playlists = document.getElementsByClassName('block')
+            const playlistArray = Array.from(playlists)
+
             songArray.forEach((song, i) => {
                 setTimeout(() => {
                     song.classList.remove('active')
@@ -88,9 +104,17 @@ export default {
                     inputRangeArray[i].classList.remove('active')
                 }, 120 * i)
             })
-        }
+
+            playlistArray.forEach((playlist, i) => {
+                setTimeout(() => {
+                    playlist.classList.remove('active')
+                }, 300 * i)
+            })
+        },
     },
     mounted() {
+        this.fetchPlaylistData()
+
         this.fetchProfileData().then(() => {
             this.startAnimation()
         })
@@ -132,16 +156,33 @@ hr {
     background-color: #ffffff;
 }
 
-.content-block {
+.content-block,
+.playlist-block {
     width: 100%;
 }
 
-.info-header {
-    width: 300px;
+.content-section {
+    overflow-y: auto;
+    overflow-x: hidden !important;
+    height: 100vh;
 
-    h1 {
-        text-align: start;
+    .content-block {
+        overflow: visible !important;
     }
+}
+
+.playlist-block {
+    display: flex;
+    flex-wrap: wrap;
+
+    position: relative;
+}
+
+.content-section {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
 }
 
 @media(max-width: 800px) {
@@ -149,11 +190,22 @@ hr {
         display: flex;
         align-items: center;
         flex-direction: column;
+        height: auto !important;
+
+        div.content-section {
+            height: auto !important;
+        }
 
         div.info-section {
             overflow-y: visible !important;
             height: auto !important;
             margin-bottom: 50px;
+
+            .info-header, .bio {
+                width: 100% !important;
+                padding: 0 30px;
+            }
+
 
             display: flex;
             flex-direction: column;
@@ -166,6 +218,12 @@ hr {
             overflow-y: visible !important;
             height: auto !important;
         }
+    }
+}
+
+@media(max-width: 1360px) {
+    .playlist-block {
+            justify-content: center;
     }
 }
 </style>
