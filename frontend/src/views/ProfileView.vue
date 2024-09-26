@@ -53,7 +53,7 @@ export default {
     methods: {
         async fetchProfileData() {
             try {
-                const response = await axios.get('user/profile/17/')
+                const response = await axios.get('user/profile/18/')
                 const profileData = response.data.profile
 
                 this.username = profileData.fullName
