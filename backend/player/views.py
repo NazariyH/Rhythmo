@@ -29,6 +29,24 @@ class SongView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+class ReactSong(APIView):
+    def get(self, request, id, *args, **kwargs):
+        song = get_object_or_404(Song, id=id)
+        is_liked = song.likes.filter(id=request.user.id).exists()
+
+        return Response({'song_is_liked': is_liked})
+    
+    def patch(self, request, id, *args, **kwargs):
+        song = get_object_or_404(Song, id=id)
+
+        if song.likes.filter(id=request.user.id).exists():
+            song.likes.remove(request.user)
+            return Response({'song_is_liked': False, 'song_likes_length': song.likes.count()}, status=status.HTTP_200_OK)
+        song.likes.add(request.user)
+        return Response({'song_is_liked': True, 'song_likes_length': song.likes.count()}, status=status.HTTP_200_OK)
+
+    
+
 class DeleteSong(APIView):
     def delete(self, request, id, *args, **kwargs):
         song = get_object_or_404(Song, id=id)

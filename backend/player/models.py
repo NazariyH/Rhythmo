@@ -13,6 +13,7 @@ class Song(models.Model):
 
     created_on = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True)
+    likes = models.ManyToManyField(User, related_name='liked', blank=True, null=True)
 
     def __str__(self):
         return self.name
