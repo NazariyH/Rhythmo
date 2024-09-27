@@ -20,8 +20,8 @@
                 </div>
 
                 <div>
-                    <p>Followers: {{ followers }}</p>
-                    <button v-if="!is_current_user">Follow</button>
+                    <p>Followers: {{ followers_count }}</p>
+                    <button v-on:click="subscribe_or_unsubscribe" v-if="!is_current_user"><span v-if="!user_is_subscribed">Subscribe</span><span v-else>Unsubscribe</span></button>
                 </div>
 
                 <hr>
@@ -46,10 +46,41 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-    props: ['profileImage', 'username', 'age', 'gender', 'bio', 'followers', 'is_current_user'],
+    name: 'ProfileInfo',
+    props: ['profileImage', 'username', 'age', 'gender', 'bio', 'followers', 'is_current_user', 'is_subscribed', 'user_id'],
+    data() {
+        return {
+            user_is_subscribed: false,
+            followers_count: 0,
+        }
+    },
+    methods: {
+        async subscribe_or_unsubscribe() {
+            const token = localStorage.getItem('token')
+            !token && this.$router.push({ 'name': 'login' })
+
+            try {
+                const response = await axios.patch(`user/profile/${this.user_id}/subscribe-or-unsubscribe/`, null, {
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    }
+                })
+
+                this.user_is_subscribed = response.data.subscribed
+                this.followers_count = response.data.subscribers_count
+            } catch(error) {
+                console.log(error)
+            }
+        }
+    },
     mounted() {
-        const infoPannel = document.getElementById('info-section');
+        const infoPannel = document.getElementById('info-section')
+        this.user_is_subscribed = this.is_subscribed
+        this.followers_count = this.followers
+
         setTimeout(() => {
             infoPannel.classList.remove('active');
         }, 100)

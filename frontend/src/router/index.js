@@ -29,7 +29,7 @@ const routes = [
     component: OwnProfileView
   },
   {
-    path: '/user/profile/1/',
+    path: '/user/profile/:id/',
     name: 'profile',
     component: ProfileView
   },

@@ -1,8 +1,9 @@
 <template>
     <div class="section">
-        <ProfileInfo v-if="!profileNotExist" :profileImage="profileImage" :username="username"
-            :age="age" :bio="bio" :gender="gender" :followers="followers" :is_current_user="is_current_user" />
-        
+        <ProfileInfo v-if="!profileNotExist" :profileImage="profileImage" :username="username" :age="age" :bio="bio"
+            :gender="gender" :followers="followers" :is_current_user="is_current_user" :is_subscribed="is_subscribed"
+            :user_id="user_id" />
+
         <div class="content-section">
             <div v-if="!profileNotExist" class="playlist-block">
                 <Playlist v-for="playlist in playlists" :playlist="playlist" :is_current_user="is_current_user" />
@@ -25,6 +26,8 @@ import ProfileInfo from '@/components/ProfileInfo.vue'
 import Song from '@/components/Song.vue'
 import Playlist from '@/components/Playlist.vue';
 
+import { useRoute } from 'vue-router'
+
 
 export default {
     name: "Profile",
@@ -36,14 +39,16 @@ export default {
     data() {
         return {
             username: '',
+            user_id: null,
             age: null,
             bio: '',
             gender: '',
             followers: 0,
             profileImage: '',
-            is_current_user: false,
 
+            is_current_user: false,
             isAuthenticated: false,
+            isSubscribed: false,
             profileNotExist: true,
 
             songs: null,
@@ -53,15 +58,20 @@ export default {
     methods: {
         async fetchProfileData() {
             try {
-                const response = await axios.get('user/profile/18/')
+                const route = useRoute()
+                const profileId = route.params.id
+                
+                const response = await axios.get(`user/profile/${profileId}/`)
                 const profileData = response.data.profile
 
                 this.username = profileData.fullName
+                this.user_id = response.data.user_id
                 this.age = profileData.age
                 this.bio = profileData.bio
                 this.gender = profileData.gender
                 this.followers = profileData.followers.length
                 this.is_current_user = response.data.is_current_user
+                this.is_subscribed = response.data.is_subscribed
                 this.profileImage = `${this.$store.getters.getBaseURL}${profileData.profileImage}`
                 this.profileNotExist = false
                 this.songs = response.data.songs
@@ -201,7 +211,8 @@ hr {
             height: auto !important;
             margin-bottom: 50px;
 
-            .info-header, .bio {
+            .info-header,
+            .bio {
                 width: 100% !important;
                 padding: 0 30px;
             }
@@ -223,7 +234,7 @@ hr {
 
 @media(max-width: 1360px) {
     .playlist-block {
-            justify-content: center;
+        justify-content: center;
     }
 }
 </style>
