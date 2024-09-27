@@ -3,7 +3,7 @@ from player.models import Song
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from .models import Profile
 from .serializers import ProfileSerializer
@@ -27,6 +27,11 @@ class CustomAuthToken(ObtainAuthToken):
 
 
 class ProfileView(APIView):
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated()]
+
     def get(self, request, pk, *args, **kwargs):
         profile = get_object_or_404(Profile, user=pk)
         songs_list = get_list_or_404(Song, author=pk)            
@@ -40,9 +45,30 @@ class ProfileView(APIView):
         if request.user == profile.user:
             is_current_user = True
 
+        is_subscribed = profile.followers.filter(id=request.user.id).exists()
+
+        response = {
+            "profile": serializer_profile.data, 
+            "user_id": profile.user.id,
+            "songs": serializer_song.data, 
+            "is_current_user": is_current_user, 
+            "is_subscribed": is_subscribed
+        }
         
-        return Response({"profile": serializer_profile.data, "is_current_user": is_current_user, "songs": serializer_song.data}, status=status.HTTP_200_OK)
-            
+        return Response(response, status=status.HTTP_200_OK)
+
+    def patch(self, request, pk, *args, **kwargs):
+        for i in range(100):
+            print(pk)
+        profile = get_object_or_404(Profile, user=pk)
+        
+        if profile.followers.filter(id=request.user.id).exists():
+            profile.followers.remove(request.user)
+            return Response({'subscribed': False, 'subscribers_count': profile.followers.count()}, status=status.HTTP_200_OK)
+        else:
+            profile.followers.add(request.user)
+            return Response({'subscribed': True, 'subscribers_count': profile.followers.count()})
+
 
 class OwnProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -51,7 +77,7 @@ class OwnProfileView(APIView):
         profile = get_object_or_404(Profile, user=request.user.id)
         serializer = ProfileSerializer(profile)
 
-        return Response({"profile": serializer.data, "is_current_user": True}, status=status.HTTP_200_OK)
+        return Response({'profile': serializer.data, 'is_current_user': True}, status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):
         profile, created = Profile.objects.get_or_create(user=request.user)
