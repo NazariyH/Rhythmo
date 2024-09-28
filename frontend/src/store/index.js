@@ -4,7 +4,7 @@ export default createStore({
     state: {
         token: '',
         isAuthenticated: false,
-        baseURL: 'http://192.168.116.137:8000/',
+        baseURL: 'http://192.168.0.102:8000/',
     },
     mutations: {
         initializeStore(state) {

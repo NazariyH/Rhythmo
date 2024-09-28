@@ -6,6 +6,7 @@ import OwnProfileView from '@/views/OwnProfileView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import ProfileEditView from '@/views/ProfileEditView.vue'
 import AddSongView from '@/views/AddSongView.vue'
+import AddPlaylistView from '@/views/AddPlaylist.vue'
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: '/player/add-song/',
     name: 'add-song',
     component: AddSongView
+  },
+  {
+    path: '/player/add-playlist/',
+    name: 'add-playlist',
+    component: AddPlaylistView
   }
 ]
 

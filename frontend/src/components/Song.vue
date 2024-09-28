@@ -42,6 +42,7 @@
             <div class="like">
                 <button v-on:click="likeOrUnlikeSong" :data-songId="song.id" v-if="!is_current_user">
                     <span>{{ current_song_likes_length }}</span>
+                    
                     <svg v-if="!song_is_liked" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                         fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
                         <path

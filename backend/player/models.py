@@ -13,7 +13,7 @@ class Song(models.Model):
 
     created_on = models.DateTimeField(default=timezone.now)
     slug = models.SlugField(unique=True, blank=True)
-    likes = models.ManyToManyField(User, related_name='liked', blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='song_is_liked_by', blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +30,8 @@ class Playlist(models.Model):
     created_on = models.DateTimeField(default=timezone.now)
 
     song = models.ManyToManyField(Song, related_name='songs', blank=True, null=True)
-    playlist_thumbnail = models.ImageField(upload_to='player/playlist/thumbnails')
+    playlist_thumbnail = models.ImageField(upload_to='player/playlist/thumbnails', blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='playlist_is_liked_by', blank=True, null=True)
 
     def __str__(self):
         return self.title
