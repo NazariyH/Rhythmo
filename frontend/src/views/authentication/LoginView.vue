@@ -119,7 +119,6 @@ export default {
         },
 
         animateBlocks() {
-            
             const blocks = document.getElementsByClassName('input-block')
             const arrayBlocks = Array.from(blocks)
 

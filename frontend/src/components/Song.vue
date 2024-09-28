@@ -42,7 +42,7 @@
             <div class="like">
                 <button v-on:click="likeOrUnlikeSong" :data-songId="song.id" v-if="!is_current_user">
                     <span>{{ current_song_likes_length }}</span>
-                    
+
                     <svg v-if="!song_is_liked" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                         fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
                         <path
@@ -67,12 +67,11 @@
             </div>
 
             <div class="addToPlaylist">
-                <button>
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                        viewBox="0 0 24 24">
-                        <path
-                            d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z" />
+                <button v-on:click="toggleBlockAddToPlaylist">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-bookmark-plus-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m6.5-11a.5.5 0 0 0-1 0V6H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V7H10a.5.5 0 0 0 0-1H8.5z" />
                     </svg>
                 </button>
             </div>
@@ -86,6 +85,28 @@
                     </svg>
                 </button>
             </div>
+        </div>
+
+        <div class="add-to-playlist" :data-addToPlaylist="song.id">
+            <form v-on:submit.prevent="addSongToPlaylist">
+                <button class="input-block active exit-button" v-on:click="toggleBlockAddToPlaylist">
+                    <span></span>
+                </button>
+
+                <div class="form-title input-block active">
+                    <h3>Add song to youre playlist</h3>
+                </div>
+
+                <div class="input-block active">
+                    <select id="playlist" v-model="playlist_choices" multiple>
+                        <option v-for="playlist_name in playlists_name" :key="playlist_name" :value="playlist_name">{{ playlist_name }}</option>
+                    </select>
+                </div>
+
+                <div class="input-block active">
+                    <button type="submit">Add</button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
@@ -109,6 +130,9 @@ export default {
             current_song_likes_length: 0,
             final_song_likes_length: 0,
             song_is_liked: false,
+
+            playlists_name: null,
+            playlist_choices: null,
         }
     },
     methods: {
@@ -188,6 +212,78 @@ export default {
                 }, 150 * i)
             }
         },
+
+        animateBlocks() {
+            const block = document.querySelector(`[data-addToPlaylist="${this.song.id}"]`)
+            const blocks = block.getElementsByClassName('input-block')
+            const arrayBlocks = Array.from(blocks)
+
+
+
+            arrayBlocks.forEach((block, i) => {
+                setTimeout(() => {
+                    block.classList.toggle('active')
+                }, 100 * i)
+            })
+        },
+
+        toggleBlockAddToPlaylist() {
+            this.animateBlocks()
+            this.fetchPlaylistsName()
+
+            const block = document.querySelector(`[data-addToPlaylist="${this.song.id}"]`)
+            block.classList.toggle('active')
+
+            const bodyOverflow = document.body.style.overflow
+            const htmlOverflow = document.documentElement.style.overflow
+
+            if (bodyOverflow == 'hidden' && htmlOverflow == 'hidden') {
+                document.body.style.overflow = ''
+                document.documentElement.style.overflow = ''
+            } else {
+                document.body.style.overflow = 'hidden'
+                document.documentElement.style.overflow = 'hidden'
+            }
+
+            const topPosition = window.scrollY || window.pageYOffset
+            block.style.top = `${topPosition}px`
+        },
+
+        async fetchPlaylistsName() {
+            const token = localStorage.getItem('token')
+            if (!token) {
+                this.$router.push({ 'name': 'login' })
+                return
+            }
+
+            try {
+                const response = await axios.get(`playlist/names/`)
+                this.playlists_name = response.data.playlists_name
+            } catch(error) {
+                console.log(error)
+                this.$router.push({ 'name': 'add-playlist' })
+            }
+        },
+
+        async addSongToPlaylist() {
+            const token = localStorage.getItem('token')
+            if (!token) {
+                this.$router.push({ 'name': 'login' })
+                return
+            }
+
+            try {
+                const response = await axios.post(`playlist/song/${this.song.id}/add/`, this.playlist_choices, {
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                    }
+                })
+
+                this.toggleBlockAddToPlaylist()
+            } catch(error) {
+                console.log(error)
+            }
+        }
     },
     mounted() {
         this.song_url = `${this.$store.getters.getBaseURL}${this.song.song}`
@@ -266,7 +362,6 @@ export default {
                 left: 50%;
 
                 transform: translate(-50%, -50%);
-                z-index: 10;
 
                 display: flex;
                 align-items: center;
@@ -322,5 +417,85 @@ export default {
     .d-none {
         display: none;
     }
+
+    .add-to-playlist {
+        position: relative;
+        display: none;
+
+        &.active {
+            display: block;
+
+            position: absolute;
+            z-index: 11;
+            top: 0;
+            left: 0;
+
+            width: 100vw;
+            height: 100vh;
+
+            background-color: #000000ba;
+        }
+
+        form {
+            position: relative;
+            margin: 0 25px 0 0;
+
+            select {
+                height: auto !important;
+            }
+
+
+            .input-block {
+                button {
+                    width: 100%;
+                    height: 30px;
+
+                    border-radius: 10px;
+                }
+            }
+
+            .exit-button {
+                position: absolute;
+
+                z-index: 200;
+                top: 5%;
+                left: 5%;
+
+                width: 25px;
+                height: 18px;
+
+                span::before,
+                span::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+
+                    width: 25px;
+                    height: 2px;
+                    background-color: #795757;
+
+                    transform: translate(-50%, -50%);
+                }
+
+                span::before {
+                    transform: rotate(45deg);
+                }
+
+                span::after {
+                    transform: rotate(-45deg);
+                }
+            }
+        }
+    }
 }
+
+@media(max-width: 800px) {
+  .section {
+    form {
+      max-width: auto !important;
+    }
+  }
+}
+
 </style>

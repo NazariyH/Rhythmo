@@ -17,7 +17,7 @@
             </div>
 
             <div class="button-panel">
-                <button class="like" v-if="is_current_user" v-on:click="likeOrUnlikePlaylist">
+                <button class="like" v-if="!is_current_user" v-on:click="likeOrUnlikePlaylist">
                     <span>{{ current_playlist_likes_length }}</span>
 
                     <svg v-if="!playlist_is_liked" xmlns="http://www.w3.org/2000/svg" width="16" height="16"

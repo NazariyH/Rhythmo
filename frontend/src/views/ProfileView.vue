@@ -60,7 +60,7 @@ export default {
             try {
                 const route = useRoute()
                 const profileId = route.params.id
-                
+
                 const response = await axios.get(`user/profile/${profileId}/`)
                 const profileData = response.data.profile
 
@@ -75,6 +75,7 @@ export default {
                 this.profileImage = `${this.$store.getters.getBaseURL}${profileData.profileImage}`
                 this.profileNotExist = false
                 this.songs = response.data.songs
+                this.playlists = response.data.playlists
             } catch (error) {
                 if (error.status = 404) {
                     this.profileNotExist = false
@@ -83,17 +84,6 @@ export default {
                 console.error('Error fetching profile:', error.response ? error.response.data : error.message)
             }
         },
-
-        async fetchPlaylistData() {
-            try {
-                const response = await axios.get('playlist/')
-
-                this.playlists = response.data.playlists
-            } catch (error) {
-                console.log(error)
-            }
-        },
-
 
         startAnimation() {
             const songs = document.getElementsByClassName('card')
@@ -123,11 +113,10 @@ export default {
         },
     },
     mounted() {
-        this.fetchPlaylistData()
-
         this.fetchProfileData().then(() => {
             this.startAnimation()
         })
+
     },
 }
 </script>
