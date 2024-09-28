@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404
+from django.http import Http404
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -35,6 +36,13 @@ class ReactSong(APIView):
         is_liked = song.likes.filter(id=request.user.id).exists()
 
         return Response({'song_is_liked': is_liked})
+    
+    def post(self, request, id, *args, **kwargs):
+        song = get_object_or_404(Song, id=id)
+        playlist = get_object_or_404(Playlist, id=request.data.id)
+
+
+        return Response({"message": "success"})
     
     def patch(self, request, id, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -96,19 +104,39 @@ class ReactPlaylist(APIView):
         playlist = get_object_or_404(Playlist, id=id)
         playlist_is_liked = playlist.likes.filter(id=request.user.id).exists()
 
-        return Response({'playlist_is_liked': playlist_is_liked}, status=status.HTTP_200_OK)
+        return Response({'playlist_is_liked': playlist_is_liked, }, status=status.HTTP_200_OK)
     
     def patch(self, request, id, *args, **kwargs):
         if not request.user.is_authenticated:
             return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
         
         playlist = get_object_or_404(Playlist, id=id)
-
-        for i in range(100):
-            print(playlist.likes.count())
         
         if playlist.likes.filter(id=request.user.id).exists():
             playlist.likes.remove(request.user)
             return Response({'playlist_is_liked': False, 'playlist_likes_length': playlist.likes.count()}, status=status.HTTP_200_OK)
         playlist.likes.add(request.user)
         return Response({'playlist_is_liked': True, 'playlist_likes_length': playlist.likes.count()}, status=status.HTTP_200_OK)
+    
+
+class PlaylistManagmentAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        playlists = get_list_or_404(Playlist, author=request.user.id)
+        playlists_serializer = PlaylistSerializer(playlists, many=True)
+
+        # Extracting titles from the serialized data
+        playlists_name = [playlist['title'] for playlist in playlists_serializer.data]
+
+        return Response({"playlists_name": playlists_name}, status=status.HTTP_200_OK)
+    
+    def post(self, request, id, *args, **kwargs):
+        song = get_object_or_404(Song, id=id)
+
+        for playlist_title in request.data:
+            playlist = get_object_or_404(Playlist, title=playlist_title)
+            if playlist.author == request.user:
+                playlist.song.add(song)
+
+        return Response(status=status.HTTP_200_OK)

@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404
-from player.models import Song
+from player.models import Song, Playlist
+from django.http import Http404
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from .models import Profile
 from .serializers import ProfileSerializer
-from player.serializers import SongSerializer
+from player.serializers import SongSerializer, PlaylistSerializer
 
 
 # Create your views here.
@@ -34,11 +35,21 @@ class ProfileView(APIView):
 
     def get(self, request, pk, *args, **kwargs):
         profile = get_object_or_404(Profile, user=pk)
-        songs_list = get_list_or_404(Song, author=pk)            
-
-
         serializer_profile = ProfileSerializer(profile)
-        serializer_song = SongSerializer(songs_list, many=True)
+
+        try: 
+            songs_list = get_list_or_404(Song, author=pk)
+            serializer_song = SongSerializer(songs_list, many=True)
+            songs = serializer_song.data
+        except Http404:
+            songs = None
+
+        try:
+            playlists_list = get_list_or_404(Playlist, author=pk)         
+            serializer_playlist = PlaylistSerializer(playlists_list, many=True)
+            playlists = serializer_playlist.data
+        except Http404:
+            playlists = None
 
         is_current_user = False
 
@@ -50,7 +61,8 @@ class ProfileView(APIView):
         response = {
             "profile": serializer_profile.data, 
             "user_id": profile.user.id,
-            "songs": serializer_song.data, 
+            "songs": songs, 
+            "playlists": playlists,
             "is_current_user": is_current_user, 
             "is_subscribed": is_subscribed
         }
