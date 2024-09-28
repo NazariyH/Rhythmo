@@ -81,10 +81,6 @@ export default {
 
         async checkPlaylistReactionStatus() {
             const token = localStorage.getItem('token')
-            if (!token) {
-                this.$router.push({ 'name': 'login' })
-                return
-            }
 
             try {
                 const response = await axios.get(`playlist/${this.playlist.id}/like/check/`, {

@@ -33,7 +33,7 @@
             </div>
 
             <div class="count">
-                <span>15:</span><span>50</span>
+                <span>{{ current_time_playing }}</span>
             </div>
 
             <input type="range" v-model="current_progress_value" value="0" class="progress active"
@@ -99,7 +99,8 @@
 
                 <div class="input-block active">
                     <select id="playlist" v-model="playlist_choices" multiple>
-                        <option v-for="playlist_name in playlists_name" :key="playlist_name" :value="playlist_name">{{ playlist_name }}</option>
+                        <option v-for="playlist_name in playlists_name" :key="playlist_name" :value="playlist_name">{{
+                            playlist_name }}</option>
                     </select>
                 </div>
 
@@ -125,7 +126,7 @@ export default {
             current_music: null,
             current_progress: null,
             current_progress_value: 0,
-            current_progress_value: 0,
+            current_time_playing: '00:00',
 
             current_song_likes_length: 0,
             final_song_likes_length: 0,
@@ -136,16 +137,23 @@ export default {
         }
     },
     methods: {
+        formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60)
+            const remainingSeconds = Math.floor(seconds % 60)
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`
+        },
+
+
         playPause(event) {
             this.current_song_id = event.currentTarget.getAttribute('data-songBtnId')
             this.current_progress = document.querySelector(`[data-songProgressId="${this.current_song_id}"]`)
             this.current_music = document.querySelector(`[data-songId="${this.current_song_id}"]`)
 
-
             this.playing ? this.current_music.pause() : this.current_music.play()
 
             if (!this.playing) {
                 setInterval(() => {
+                    this.current_time_playing = this.formatTime(this.current_music.currentTime)
                     this.current_progress_value = Math.round(100 * this.current_music.currentTime / this.current_music.duration)
                     this.current_progress.value = this.current_progress_value
 
@@ -259,7 +267,7 @@ export default {
             try {
                 const response = await axios.get(`playlist/names/`)
                 this.playlists_name = response.data.playlists_name
-            } catch(error) {
+            } catch (error) {
                 console.log(error)
                 this.$router.push({ 'name': 'add-playlist' })
             }
@@ -280,7 +288,7 @@ export default {
                 })
 
                 this.toggleBlockAddToPlaylist()
-            } catch(error) {
+            } catch (error) {
                 console.log(error)
             }
         }
@@ -491,11 +499,10 @@ export default {
 }
 
 @media(max-width: 800px) {
-  .section {
-    form {
-      max-width: auto !important;
+    .section {
+        form {
+            max-width: auto !important;
+        }
     }
-  }
 }
-
 </style>

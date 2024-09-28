@@ -12,7 +12,6 @@
                     <li v-else>
                         <router-link :to="{ name: 'login' }">Add song</router-link>
                     </li>
-
                     <li v-if="isAuthenticated">
                         <router-link :to="{ name: 'add-playlist' }">Add playlist</router-link>
                     </li>
