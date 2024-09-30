@@ -89,8 +89,6 @@ export default {
                     }
                 })
 
-                console.log('success3')
-
 
                 this.playlist_is_liked = response.data.playlist_is_liked
             } catch (error) {

@@ -35,7 +35,9 @@ class ReactSong(APIView):
         song = get_object_or_404(Song, id=id)
         is_liked = song.likes.filter(id=request.user.id).exists()
 
-        return Response({'song_is_liked': is_liked})
+        author_id = song.author.id
+
+        return Response({'song_is_liked': is_liked, 'author_id': author_id})
     
     def post(self, request, id, *args, **kwargs):
         song = get_object_or_404(Song, id=id)
@@ -104,7 +106,7 @@ class ReactPlaylist(APIView):
         playlist = get_object_or_404(Playlist, id=id)
         playlist_is_liked = playlist.likes.filter(id=request.user.id).exists()
 
-        return Response({'playlist_is_liked': playlist_is_liked, }, status=status.HTTP_200_OK)
+        return Response({'playlist_is_liked': playlist_is_liked}, status=status.HTTP_200_OK)
     
     def patch(self, request, id, *args, **kwargs):
         if not request.user.is_authenticated:

@@ -5,7 +5,8 @@
                 <img v-bind:src="song_thumbnail_url">
                 <div>
                     <h4>{{ song.name }}</h4>
-                    <router-link to="">{{ song.author }}</router-link>
+                    <router-link v-if="author_id" :to="{ name: 'profile', params: { id: author_id } }">{{ song.author
+                        }}</router-link>
                 </div>
             </div>
         </div>
@@ -121,6 +122,7 @@ export default {
         return {
             song_url: '',
             song_thumbnail_url: '',
+            author_id: null,
 
             playing: false,
             current_music: null,
@@ -194,6 +196,7 @@ export default {
                 })
 
                 this.song_is_liked = response.data.song_is_liked
+                this.author_id = response.data.author_id
             } catch (error) {
                 console.log(error)
             }
@@ -231,11 +234,9 @@ export default {
             const blocks = block.getElementsByClassName('input-block')
             const arrayBlocks = Array.from(blocks)
 
-
-
-            arrayBlocks.forEach((block, i) => {
+            arrayBlocks.forEach((el, i) => {
                 setTimeout(() => {
-                    block.classList.toggle('active')
+                    el.classList.toggle('active')
                 }, 100 * i)
             })
         },
@@ -259,6 +260,7 @@ export default {
             }
 
             const topPosition = window.scrollY || window.pageYOffset
+            console.log(topPosition)
             block.style.top = `${topPosition}px`
         },
 
@@ -292,7 +294,14 @@ export default {
                     }
                 })
 
-                this.toggleBlockAddToPlaylist()
+                const block = document.querySelector(`[data-addToPlaylist="${this.song.id}"]`)
+                block.classList.remove('active')
+
+                if (bodyOverflow == 'hidden' && htmlOverflow == 'hidden') {
+                    document.body.style.overflow = ''
+                    document.documentElement.style.overflow = ''
+                }
+
             } catch (error) {
                 console.log(error)
             }
