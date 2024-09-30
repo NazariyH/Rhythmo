@@ -228,7 +228,7 @@ export default {
 
 <style>
 nav {
-    position: fixed;
+    position: sticky;
     z-index: 2;
     top: 0;
 

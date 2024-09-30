@@ -133,12 +133,12 @@ export default {
         }
 
         label#songBtn {
-            border-radius: 20px 0 0 20px;
+            border-radius: 20px 0 0 20px !important;
             border-right: .5px solid #000000;
         }
 
         label#thumbnailBtn {
-            border-radius: 0 20px 20px 0;
+            border-radius: 0 20px 20px 0 !important;
         }
 
 
