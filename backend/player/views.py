@@ -175,3 +175,15 @@ class PlaylistDetailView(APIView):
             playlist_serializer.save()
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class RemoveSongFromPlaylist(APIView):
+    def delete(self, request, playlist_id, song_id, *args, **kwargs):
+        playlist = get_object_or_404(Playlist, id=playlist_id)
+        song = playlist.song.filter(id=song_id).first()
+
+        if playlist.author == request.user and song:
+            playlist.song.remove(song)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        
+        return Response(status=status.HTTP_400_BAD_REQUEST)

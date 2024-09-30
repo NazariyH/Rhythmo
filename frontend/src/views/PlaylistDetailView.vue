@@ -66,7 +66,7 @@
 
         <div class="content-section">
             <div v-if="songs" v-for="song in songs">
-                <Song :song="song" :is_current_user="is_current_user" />
+                <Song :song="song" :is_current_user="is_current_user" :playlistId="playlist.id" />
             </div>
             <div v-else>Loading...</div>
         </div>

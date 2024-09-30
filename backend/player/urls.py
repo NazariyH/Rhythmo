@@ -15,4 +15,5 @@ urlpatterns = [
     path('playlist/<int:id>/like-or-dislike/', views.ReactPlaylist.as_view()),
     path('playlist/<int:id>/remove/', views.DeletePlaylist.as_view(), name='remove-playlist'),
     path('playlist/<int:id>/detail/', views.PlaylistDetailView.as_view(), name='playlist-detail'),
+    path('playlist/<int:playlist_id>/song/<int:song_id>/remove/', views.RemoveSongFromPlaylist.as_view(), name='remove-song-from-playlist'),
 ]

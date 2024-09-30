@@ -116,7 +116,7 @@
 import axios from 'axios'
 
 export default {
-    props: ["song", "is_current_user"],
+    props: ["song", "is_current_user", "playlistId"],
     data() {
         return {
             song_url: '',
@@ -172,8 +172,13 @@ export default {
 
         async removeSong(event) {
             try {
-                const response = await axios.delete(`song/remove/${this.song.id}/`)
-                document.querySelector(`[data-songBlockId="${songId}"]`).remove()
+                if (this.playlistId) {
+                    const response = await axios.delete(`playlist/${this.playlistId}/song/${this.song.id}/remove/`)
+                } else {
+                    const response = await axios.delete(`song/remove/${this.song.id}/`)
+                }
+
+                document.querySelector(`[data-songBlockId="${this.song.id}"]`).remove()
             } catch (error) {
                 console.log(error)
             }
