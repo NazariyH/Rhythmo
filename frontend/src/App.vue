@@ -52,7 +52,13 @@ textarea,
 select {
   margin: 0;
   padding: 0;
-  word-break: break-all;
+}
+
+.bio,
+.description {
+  p {
+    word-break: break-all;
+  }
 }
 
 /* Remove list styles */
