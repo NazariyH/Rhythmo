@@ -7,7 +7,7 @@
 
         <div class="footer">
             <div>
-                <router-link>
+                <router-link :to="{ name: 'playlist-detail', params: { id: playlist.id }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-play-fill" viewBox="0 0 16 16">
                         <path
@@ -112,7 +112,6 @@ export default {
                         'Authorization': `Token ${this.$store.state.token}`,
                     }
                 })
-
 
                 this.playlist_is_liked = response.data.playlist_is_liked
                 this.current_playlist_likes_length = response.data.playlist_likes_length

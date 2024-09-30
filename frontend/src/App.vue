@@ -100,6 +100,7 @@ body {
   overflow-x: hidden;
 }
 
+
 /* Ensure all elements inherit font color */
 body,
 h1,
@@ -152,6 +153,10 @@ nav {
     width: 720px !important;
     padding: 0 20px;
   }
+}
+
+.errors-block ul li {
+  color: #ff0000;
 }
 
 @media(max-width: 800px) {

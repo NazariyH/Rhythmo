@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import Http404
 
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework.response import Response
 from .serializers import SongSerializer, PlaylistSerializer
@@ -140,3 +140,38 @@ class PlaylistManagmentAPIView(APIView):
                 playlist.song.add(song)
 
         return Response(status=status.HTTP_200_OK)
+    
+
+class PlaylistDetailView(APIView):
+    permission_classes = [AllowAny]
+    
+    def get(self, request, id, *args, **kwargs):
+        playlist = get_object_or_404(Playlist, pk=id)
+        playlist_serializer = PlaylistSerializer(playlist)
+
+        is_current_user = request.user == playlist.author
+        playlist_is_liked = playlist.likes.filter(id=request.user.id).exists()
+        songs = SongSerializer(playlist.song.all(), many=True).data
+
+        data = {
+            'playlist': playlist_serializer.data, 
+            'is_current_user': is_current_user,
+            'playlist_is_liked': playlist_is_liked,
+            'songs': songs,
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+    
+    def post(self, request, id, *args, **kwargs):
+        playlist = get_object_or_404(Playlist, pk=id)
+
+        request_data = request.data.copy()
+        playlist_serializer = PlaylistSerializer(instance=playlist, data=request_data)
+
+        if request_data['playlist_thumbnail'] == '':
+            request_data['playlist_thumbnail'] = playlist.playlist_thumbnail
+
+        if playlist_serializer.is_valid():
+            playlist_serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

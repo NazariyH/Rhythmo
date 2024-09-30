@@ -16,7 +16,7 @@
             </div>
 
             <div class="input-block active buttons">
-                <label id="thumbnailBtn" for="thumbnail">
+                <label id="thumbnailPlaylisyBtn" for="thumbnail">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-image" viewBox="0 0 16 16">
                         <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
@@ -26,6 +26,12 @@
                 </label>
 
                 <input type="file" id="thumbnail" v-on:input="onThumbnailChange">
+            </div>
+
+            <div v-if="errors.length" class="errors-block">
+                <ul>
+                    <li v-for="error in errors">{{ error }}</li>
+                </ul>
             </div>
 
             <div class="input-block active">
@@ -45,6 +51,7 @@ export default {
             title: '',
             description: '',
             thumbnail: null,
+            errors: [],
         }
     },
     methods: {
@@ -85,6 +92,13 @@ export default {
 
                 this.$router.push({ 'name': 'home' })
             } catch (error) {
+                if (error.response && error.response.data) {
+                    const titleMessage = error.response.data.title ? error.response.data.title.join(', ') : 'Unknown error'
+                    this.errors.push(titleMessage)
+                } else {
+                    this.errorMessages.push('An unknown error occurred.')
+                }
+
                 console.log(error)
             }
         }
@@ -99,6 +113,9 @@ export default {
 .input-block.buttons label {
     width: 100% !important;
     border-radius: 10px !important;
+}
 
+.input-block.buttons label#thumbnailPlaylisyBtn {
+    border-radius: 20px !important;
 }
 </style>

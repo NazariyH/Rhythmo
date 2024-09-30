@@ -70,8 +70,6 @@ class ProfileView(APIView):
         return Response(response, status=status.HTTP_200_OK)
 
     def patch(self, request, pk, *args, **kwargs):
-        for i in range(100):
-            print(pk)
         profile = get_object_or_404(Profile, user=pk)
         
         if profile.followers.filter(id=request.user.id).exists():
