@@ -8,7 +8,7 @@
 
         <div class="footer">
             <div class="play">
-                <router-link :to="{ name: 'playlist-detail', params: { id: playlist.id }}">
+                <router-link :to="{ name: 'playlist-detail', params: { id: playlist.id } }">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-play-fill" viewBox="0 0 16 16">
                         <path
@@ -42,7 +42,8 @@
                     </svg>
                 </button>
 
-                <button v-if="!searchView">
+                <button v-if="!searchView" class="info-btn" :data-id="playlist.id" v-on:mouseenter="toggleShowBar" v-on:mouseleave="toggleShowBar">
+                    <div class="dynamic-info-block" :data-id="playlist.id">{{ created_on }}</div>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                         <path
@@ -69,6 +70,7 @@ export default {
             final_playlist_likes_length: 0,
             current_playlist_likes_length: 0,
             playlist_short_title: '',
+            created_on: '',
         }
     },
     methods: {
@@ -128,11 +130,20 @@ export default {
                 }, 150 * i)
             }
         },
+
+        toggleShowBar(event) {
+            const blockId = event.currentTarget.getAttribute('data-id')
+            const block = document.querySelector(`[data-id="${blockId}"]`)
+            block.querySelector('.dynamic-info-block').classList.toggle('active')
+        },
     },
     mounted() {
         this.playlist_thumbnail = `${this.$store.getters.getBaseURL}${this.playlist.playlist_thumbnail}`
         this.final_playlist_likes_length = this.playlist.likes.length
         this.playlist_short_title = this.playlist.title.slice(0, 6) + '..'
+
+        let date = new Date(this.playlist.created_on)
+        this.created_on = date.toISOString().split('T')[0]
 
         this.checkPlaylistReactionStatus().then(() => {
             this.startLikeCountAnimation()
@@ -190,6 +201,33 @@ export default {
             button {
                 display: flex;
                 align-items: center;
+
+                &.info-btn {
+                    position: relative;
+
+
+                    .dynamic-info-block {
+                        position: absolute;
+
+                        top: 50%;
+                        transform: translateY(-50%);
+
+                        left: -110px;
+
+                        width: 100px;
+                        height: auto;
+                        padding: 5px;
+
+                        background-color: #000000c1;
+                        color: #ffffff;
+
+                        display: none !important;
+
+                        &.active {
+                            display: block !important;
+                        }
+                    }
+                }
 
                 svg {
                     width: 14px;

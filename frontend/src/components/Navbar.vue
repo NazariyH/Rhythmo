@@ -98,18 +98,6 @@
         </div>
 
         <div class="vertical-menu">
-            <form class="vertical-search-form">
-                <input class="form-control me-2" type="text" v-bind:placeholder="finalMessage" v-on:input="getResult"
-                    v-model="searchQuery">
-                <button id="searchButton" type="submit">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
-                            d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                    </svg>
-                </button>
-            </form>
-
             <div class="vertical-navbar-menu">
                 <ul>
                     <li v-if="isAuthenticated">
@@ -457,7 +445,6 @@ nav .vertical-menu-btn {
 @media (max-width: 1200px) {
 
     nav div .navbar-menu,
-    nav .search-form,
     nav .icons-menu {
         display: none;
     }
@@ -670,6 +657,19 @@ div#searchBlock {
 
 
 @media(max-width: 600px) {
+    .navbar-brand {
+        a {
+            font-size: 16px !important;
+        }
+    }
+
+    .search-form {
+        input {
+            max-width: 200px !important;
+            height: 30px;
+        }
+    }
+
     div#searchBlock {
         width: 300px;
 
@@ -694,6 +694,24 @@ div#searchBlock {
                 margin: 0 0 0 10px !important;
             }
         }
+    }
+}
+
+@media(max-width: 600px) {
+    .navbar-brand {
+        a {
+            margin-right: 10px !important; 
+        }
+    }
+    .search-form {
+        input {
+            border-radius: 10px !important;
+
+            width: auto !important;
+        }
+    }
+    #searchButton {
+        display: none;
     }
 }
 </style>

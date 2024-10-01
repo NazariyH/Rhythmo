@@ -78,7 +78,8 @@
             </div>
 
             <div class="info-btn">
-                <button>
+                <div class="dynamic-info-block" :data-id="song.id">{{ created_on }}</div>
+                <button v-on:mouseenter="toggleShowBar" v-on:mouseleave="toggleShowBar" :data-id="song.id">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                         <path
@@ -123,6 +124,7 @@ export default {
             song_url: '',
             song_thumbnail_url: '',
             author_id: null,
+            created_on: '',
 
             playing: false,
             current_music: null,
@@ -305,12 +307,20 @@ export default {
             } catch (error) {
                 console.log(error)
             }
+        },
+
+        toggleShowBar(event) {
+            const blockId = event.currentTarget.getAttribute('data-id')
+            document.querySelector(`[data-id="${blockId}"]`).classList.toggle('active')
         }
     },
     mounted() {
         this.song_url = `${this.$store.getters.getBaseURL}${this.song.song}`
         this.song_thumbnail_url = `${this.$store.getters.getBaseURL}${this.song.song_thumbnail}`
         this.final_song_likes_length = this.song.likes.length
+
+        let date = new Date(this.song.created_on)
+        this.created_on = date.toISOString().split('T')[0]
 
         this.checkSongReactionStatus().then(() => {
             this.startLikeCountAnimation()
@@ -367,6 +377,33 @@ export default {
             position: relative;
             width: 15px;
             height: 15px;
+
+            &.info-btn {
+                position: relative;
+
+
+                .dynamic-info-block {
+                    position: absolute;
+
+                    top: 50%;
+                    transform: translateY(-50%);
+
+                    left: -110px;
+
+                    width: 100px;
+                    height: auto;
+                    padding: 5px;
+
+                    background-color: #000000c1;
+                    color: #ffffff;
+
+                    display: none !important;
+
+                    &.active {
+                        display: block !important;
+                    }
+                }
+            }
 
             &.addToPlaylist,
             &.trash,
