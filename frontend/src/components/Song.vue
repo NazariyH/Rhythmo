@@ -40,52 +40,67 @@
             <input type="range" v-model="current_progress_value" value="0" class="progress active"
                 :data-songProgressId="song.id" v-on:input="updateCurrentMusicTime">
 
-            <div class="like">
-                <button v-on:click="likeOrUnlikeSong" :data-songId="song.id" v-if="!is_current_user">
-                    <span>{{ current_song_likes_length }}</span>
+            <div class="panel">
+                <div class="like" v-if="!is_current_user">
+                    <button v-on:click="likeOrUnlikeSong" :data-songId="song.id">
+                        <span>{{ current_song_likes_length }}</span>
 
-                    <svg v-if="!song_is_liked" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                        fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
-                        <path
-                            d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.6 7.6 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z" />
-                    </svg>
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1" />
-                    </svg>
-                </button>
-            </div>
+                        <svg v-if="!song_is_liked" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-suit-heart" viewBox="0 0 16 16">
+                            <path
+                                d="m8 6.236-.894-1.789c-.222-.443-.607-1.08-1.152-1.595C5.418 2.345 4.776 2 4 2 2.324 2 1 3.326 1 4.92c0 1.211.554 2.066 1.868 3.37.337.334.721.695 1.146 1.093C5.122 10.423 6.5 11.717 8 13.447c1.5-1.73 2.878-3.024 3.986-4.064.425-.398.81-.76 1.146-1.093C14.446 6.986 15 6.131 15 4.92 15 3.326 13.676 2 12 2c-.777 0-1.418.345-1.954.852-.545.515-.93 1.152-1.152 1.595zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.6 7.6 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z" />
+                        </svg>
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1" />
+                        </svg>
+                    </button>
+                </div>
 
-            <div class="trash" v-if="!searchView">
-                <button v-if="is_current_user" :data-songId="song.id" v-on:click="removeSong">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-trash-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                    </svg>
-                </button>
-            </div>
+                <div class="download">
+                    <button v-on:click="downloadSong">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-download" viewBox="0 0 16 16">
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                            <path
+                                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                        </svg>
+                    </button>
+                </div>
 
-            <div class="addToPlaylist">
-                <button v-on:click="toggleBlockAddToPlaylist" v-if="!searchView">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-bookmark-plus-fill" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m6.5-11a.5.5 0 0 0-1 0V6H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V7H10a.5.5 0 0 0 0-1H8.5z" />
-                    </svg>
-                </button>
-            </div>
+                <div class="trash" v-if="!searchView && is_current_user">
+                    <button :data-songId="song.id" v-on:click="removeSong">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-trash-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                        </svg>
+                    </button>
+                </div>
 
-            <div class="info-btn">
-                <div class="dynamic-info-block" :data-id="song.id">{{ created_on }}</div>
-                <button v-on:mouseenter="toggleShowBar" v-on:mouseleave="toggleShowBar" :data-id="song.id">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-info-circle-fill" viewBox="0 0 16 16">
-                        <path
-                            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
-                    </svg>
-                </button>
+                <div class="addToPlaylist" v-if="!searchView">
+                    <button v-on:click="toggleBlockAddToPlaylist">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-bookmark-plus-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m6.5-11a.5.5 0 0 0-1 0V6H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V7H10a.5.5 0 0 0 0-1H8.5z" />
+                        </svg>
+                    </button>
+                </div>
+
+
+                <div class="info-btn">
+                    <div class="dynamic-info-block" :data-id="song.id">{{ created_on }}</div>
+                    <button v-on:mouseenter="toggleShowBar" v-on:mouseleave="toggleShowBar" :data-id="song.id">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -312,6 +327,27 @@ export default {
         toggleShowBar(event) {
             const blockId = event.currentTarget.getAttribute('data-id')
             document.querySelector(`[data-id="${blockId}"]`).classList.toggle('active')
+        },
+
+        async downloadSong() {
+            try {
+                const response = await axios.get(`song/${this.song.id}/download/`, {
+                    responseType: 'blob'
+                })
+
+                const url = window.URL.createObjectURL(new Blob([response.data]))
+                const link = document.createElement('a')
+
+                link.href = url
+
+                link.setAttribute('download', `${this.song.name}.mp3`)
+                document.body.appendChild(link)
+                link.click()
+
+                window.URL.revokeObjectURL(url)
+            } catch (error) {
+                console.log(error)
+            }
         }
     },
     mounted() {
@@ -325,7 +361,7 @@ export default {
         this.checkSongReactionStatus().then(() => {
             this.startLikeCountAnimation()
         })
-    }
+    },
 }
 </script>
 
@@ -373,10 +409,25 @@ export default {
         align-items: center;
         margin-top: 20px;
 
+        .play {
+            margin-right: 10px !important;
+        }
+
         div {
             position: relative;
             width: 15px;
             height: 15px;
+
+            &.panel {
+                display: flex;
+                justify-content: space-between;
+                min-width: 100px;
+                width: auto !important;
+
+                div.like {
+                    width: 40px;
+                }
+            }
 
             &.info-btn {
                 position: relative;
@@ -403,12 +454,6 @@ export default {
                         display: block !important;
                     }
                 }
-            }
-
-            &.addToPlaylist,
-            &.trash,
-            &.like {
-                margin-right: 10px;
             }
 
             &.play svg {

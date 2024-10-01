@@ -66,7 +66,8 @@
         </div>
 
         <div id="searchBlock">
-            <div class="search-block-wrap" v-if="!songs.length && !playlists.length && !profiles.length" style="justify-content: center;">
+            <div class="search-block-wrap" v-if="!songs.length && !playlists.length && !profiles.length"
+                style="justify-content: center;">
                 <h3>We can't find anything :(</h3>
             </div>
 
@@ -555,6 +556,14 @@ div#searchBlock {
 
         background-color: antiquewhite;
 
+        // .download {
+        //     margin: 0 10px !important;
+        // }
+
+        // .like {
+        //     margin-right: 27px !important;
+        // }
+
         .card {
             display: flex;
             justify-content: space-between;
@@ -643,7 +652,7 @@ div#searchBlock {
 
 @media(max-width: 900px) {
     div#searchBlock {
-        width: 500px;
+        width: 570px;
 
         .search-block-wrap {
             width: 500px;
@@ -651,6 +660,10 @@ div#searchBlock {
             .player {
                 margin-left: 20px !important;
             }
+        }
+
+        .count {
+            display: none;
         }
     }
 }
@@ -682,16 +695,11 @@ div#searchBlock {
 
 
             .info-btn,
-            .count,
             .progress,
             .info img,
             .like span,
             .addToPlaylist {
                 display: none;
-            }
-
-            .like {
-                margin: 0 0 0 10px !important;
             }
         }
     }
@@ -700,9 +708,11 @@ div#searchBlock {
 @media(max-width: 600px) {
     .navbar-brand {
         a {
-            margin-right: 10px !important; 
+            margin-right: 10px !important;
         }
     }
+
+
     .search-form {
         input {
             border-radius: 10px !important;
@@ -710,8 +720,16 @@ div#searchBlock {
             width: auto !important;
         }
     }
+
     #searchButton {
         display: none;
+    }
+
+    .search-block-wrap {
+        .panel {
+            max-width: 40px !important;
+            min-width: 40px !important;
+        }
     }
 }
 </style>

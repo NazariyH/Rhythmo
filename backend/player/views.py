@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.db.models import Count
 
 from rest_framework.views import APIView
@@ -224,3 +224,12 @@ class SearchDataAPIView(APIView):
         }
 
         return Response(data, status=status.HTTP_200_OK)
+    
+
+def downloadSong(requset, id):
+    song = get_object_or_404(Song, id=id)
+    song_file = song.song.open()
+    
+    response = HttpResponse(song_file, content_type='audio/mpeg')
+    response['Content-Disposition'] = f'attachment; filename="{song.song.name}"'
+    return response
