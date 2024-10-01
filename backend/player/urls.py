@@ -16,4 +16,6 @@ urlpatterns = [
     path('playlist/<int:id>/remove/', views.DeletePlaylist.as_view(), name='remove-playlist'),
     path('playlist/<int:id>/detail/', views.PlaylistDetailView.as_view(), name='playlist-detail'),
     path('playlist/<int:playlist_id>/song/<int:song_id>/remove/', views.RemoveSongFromPlaylist.as_view(), name='remove-song-from-playlist'),
+
+    path('search/', views.SearchDataAPIView.as_view(), name='search'),
 ]

@@ -2,11 +2,12 @@
     <div class="block active" :data-playlistBlockId="playlist.id">
         <div class="block-header"><img :src="playlist_thumbnail" alt="image"></div>
         <div class="description">
-            <h4>{{ playlist.title }}</h4>
+            <h4 v-if="!searchView">{{ playlist.title }}</h4>
+            <h4 v-else>{{ playlist_short_title }}</h4>
         </div>
 
         <div class="footer">
-            <div>
+            <div class="play">
                 <router-link :to="{ name: 'playlist-detail', params: { id: playlist.id }}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-play-fill" viewBox="0 0 16 16">
@@ -33,7 +34,7 @@
                     </svg>
                 </button>
 
-                <button class="trash" v-if="is_current_user" v-on:click="removePlaylist">
+                <button class="trash" v-if="is_current_user && !searchView" v-on:click="removePlaylist">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-trash-fill" viewBox="0 0 16 16">
                         <path
@@ -41,7 +42,7 @@
                     </svg>
                 </button>
 
-                <button>
+                <button v-if="!searchView">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-info-circle-fill" viewBox="0 0 16 16">
                         <path
@@ -59,7 +60,7 @@ import axios from 'axios'
 
 export default {
     name: 'Playlist',
-    props: ['playlist', 'is_current_user'],
+    props: ['playlist', 'is_current_user', 'searchView'],
     data() {
         return {
             playlist_thumbnail: '',
@@ -67,6 +68,7 @@ export default {
             playlist_is_liked: false,
             final_playlist_likes_length: 0,
             current_playlist_likes_length: 0,
+            playlist_short_title: '',
         }
     },
     methods: {
@@ -130,6 +132,7 @@ export default {
     mounted() {
         this.playlist_thumbnail = `${this.$store.getters.getBaseURL}${this.playlist.playlist_thumbnail}`
         this.final_playlist_likes_length = this.playlist.likes.length
+        this.playlist_short_title = this.playlist.title.slice(0, 6) + '..'
 
         this.checkPlaylistReactionStatus().then(() => {
             this.startLikeCountAnimation()

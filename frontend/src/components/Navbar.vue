@@ -23,7 +23,8 @@
         </div>
 
         <form class="search-form" action="#">
-            <input class="form-control me-2" type="text" v-bind:placeholder="finalMessage">
+            <input class="form-control me-2" type="text" v-bind:placeholder="finalMessage" v-on:input="getResult"
+                v-model="searchQuery">
             <button id="searchButton" type="submit">
                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -64,6 +65,30 @@
             </ul>
         </div>
 
+        <div id="searchBlock">
+            <div class="search-block-wrap" v-if="!songs.length && !playlists.length && !profiles.length" style="justify-content: center;">
+                <h3>We can't find anything :(</h3>
+            </div>
+
+            <div class="search-block-wrap" v-else>
+                <Song v-for="song in songs" :song="song" :searchView="true" />
+
+                <div class="playlist-wrap">
+                    <Playlist v-for="playlist in playlists" :playlist="playlist" :searchView="true" />
+                </div>
+
+                <div class="profile-wrap">
+                    <div class="block" v-for="profile in profiles" :key="profile.user">
+                        <img :src="`${url}/${profile.profileImage}`" alt="profile">
+
+                        <router-link :to="{ name: 'profile', params: { id: profile.user } }">
+                            {{ profile.fullName.slice(0, 5) + '..' }}
+                        </router-link>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="vertical-menu-btn" v-on:click="activateBtnMenu">
             <div>
                 <span></span>
@@ -74,7 +99,8 @@
 
         <div class="vertical-menu">
             <form class="vertical-search-form">
-                <input class="form-control me-2" type="text" v-bind:placeholder="finalMessage">
+                <input class="form-control me-2" type="text" v-bind:placeholder="finalMessage" v-on:input="getResult"
+                    v-model="searchQuery">
                 <button id="searchButton" type="submit">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -139,15 +165,27 @@
 <script>
 import axios from 'axios'
 import store from '@/store'
+import Song from '@/components/Song.vue'
+import Playlist from '@/components/Playlist.vue'
 
 export default {
     name: "Navbar",
+    components: {
+        Song,
+        Playlist,
+    },
     data() {
         return {
             message: 'Search for music and playlists ...',
             finalMessage: '',
             username: '',
             isAuthenticated: false,
+            searchQuery: '',
+
+            songs: [],
+            playlists: [],
+            profiles: [],
+            url: '',
         }
     },
     methods: {
@@ -215,18 +253,79 @@ export default {
 
                     this.$router.push('/user/log-in/')
                 })
+        },
+
+        getResult() {
+            this.fetchSearchResults().then(() => {
+                this.startAnimation()
+                this.startPlaylistAntimation()
+            })
+        },
+
+        async fetchSearchResults() {
+            const searchBlock = document.getElementById('searchBlock')
+
+            if (this.searchQuery) {
+                searchBlock.classList.add('active')
+            } else {
+                searchBlock.classList.remove('active')
+            }
+
+            try {
+                const response = await axios.get(`search/?query=${this.searchQuery}`)
+
+                this.songs = response.data.songs
+                this.playlists = response.data.playlists
+                this.profiles = response.data.profiles
+
+                this.startAnimation()
+                this.startPlaylistAntimation()
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+        startAnimation() {
+            const songs = document.getElementsByClassName('card')
+            const inputRange = document.getElementsByClassName('progress')
+
+            const songArray = Array.from(songs)
+            const inputRangeArray = Array.from(inputRange)
+
+            songArray.forEach((song, i) => {
+                setTimeout(() => {
+                    song.classList.remove('active')
+                }, 80 * i)
+
+                setTimeout(() => {
+                    inputRangeArray[i].classList.remove('active')
+                }, 120 * i)
+            })
+        },
+
+        startPlaylistAntimation() {
+            const playlists = document.getElementsByClassName('block')
+            const playlistArray = Array.from(playlists)
+
+            playlistArray.forEach((playlist, i) => {
+                setTimeout(() => {
+                    playlist.classList.remove('active')
+                }, 300 * i)
+            })
         }
     },
     mounted() {
         this.isAuthenticated = localStorage.getItem('auth_status') === 'true' ? true : false
         this.searchFieldAnimation()
 
+        this.url = this.$store.getters.getBaseURL
+
         setInterval(this.searchFieldAnimation, 10000)
     }
 }
 </script>
 
-<style>
+<style lang="scss">
 nav {
     position: sticky;
     z-index: 2;
@@ -437,5 +536,164 @@ nav .vertical-menu-btn.active span:nth-child(2) {
 
 nav .vertical-menu-btn.active span:nth-child(3) {
     transform: rotate(-45deg);
+}
+
+div#searchBlock {
+    position: absolute;
+    overflow-x: hidden;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 800px;
+    height: 500px;
+
+
+    display: none;
+
+    &.active {
+        display: block;
+    }
+
+    .search-block-wrap {
+        width: 800px;
+        min-height: 500px;
+        height: auto;
+        padding: 10px 20px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+
+        background-color: antiquewhite;
+
+        .card {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .profile-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: start;
+            width: 100%;
+
+            .block:nth-child(1) {
+                margin-left: 0px !important;
+            }
+
+            .block {
+                display: flex;
+                flex-direction: column;
+                width: 90px;
+                height: 90px;
+
+                img {
+                    width: 90px;
+                    height: 90px;
+
+                    border-radius: 50%;
+                }
+
+                a {
+                    color: #0000EE;
+                }
+            }
+        }
+
+        .playlist-wrap {
+            display: flex;
+            justify-content: start;
+            flex-wrap: wrap;
+            width: 100%;
+
+            .block:nth-child(1) {
+                margin-left: 0px !important;
+            }
+
+            .block {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+                width: 90px;
+                min-height: 140px;
+                max-height: 140px;
+                margin-right: 10px;
+                background-color: #fcf4ea;
+
+
+                img {
+                    width: 90px;
+                    height: 90px;
+                }
+
+                .footer {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    height: 30px;
+
+                    .play {
+                        a svg {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+
+                    button {
+                        transform: scale(1);
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+@media(max-width: 900px) {
+    div#searchBlock {
+        width: 500px;
+
+        .search-block-wrap {
+            width: 500px;
+
+            .player {
+                margin-left: 20px !important;
+            }
+        }
+    }
+}
+
+
+@media(max-width: 600px) {
+    div#searchBlock {
+        width: 300px;
+
+        .search-block-wrap {
+            width: 300px;
+
+            .card {
+                padding: 10px 10px;
+            }
+
+
+            .info-btn,
+            .count,
+            .progress,
+            .info img,
+            .like span,
+            .addToPlaylist {
+                display: none;
+            }
+
+            .like {
+                margin: 0 0 0 10px !important;
+            }
+        }
+    }
 }
 </style>

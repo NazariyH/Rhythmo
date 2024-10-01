@@ -57,7 +57,7 @@
                 </button>
             </div>
 
-            <div class="trash">
+            <div class="trash" v-if="!searchView">
                 <button v-if="is_current_user" :data-songId="song.id" v-on:click="removeSong">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-trash-fill" viewBox="0 0 16 16">
@@ -68,7 +68,7 @@
             </div>
 
             <div class="addToPlaylist">
-                <button v-on:click="toggleBlockAddToPlaylist">
+                <button v-on:click="toggleBlockAddToPlaylist" v-if="!searchView">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-bookmark-plus-fill" viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
@@ -77,7 +77,7 @@
                 </button>
             </div>
 
-            <div>
+            <div class="info-btn">
                 <button>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-info-circle-fill" viewBox="0 0 16 16">
@@ -117,7 +117,7 @@
 import axios from 'axios'
 
 export default {
-    props: ["song", "is_current_user", "playlistId"],
+    props: ["song", "is_current_user", "playlistId", "searchView"],
     data() {
         return {
             song_url: '',
@@ -369,7 +369,8 @@ export default {
             height: 15px;
 
             &.addToPlaylist,
-            &.trash {
+            &.trash,
+            &.like {
                 margin-right: 10px;
             }
 

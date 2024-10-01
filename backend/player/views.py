@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import Http404
+from django.db.models import Count
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -7,6 +8,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from .serializers import SongSerializer, PlaylistSerializer
 from .models import Song, Playlist
+from user.models import Profile
+from user.serializers import ProfileSerializer
 
 
 # Create your views here.
@@ -189,3 +192,35 @@ class RemoveSongFromPlaylist(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+
+class SearchDataAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('query')
+
+        songs = Song.objects.filter(name__icontains=query) \
+            .annotate(like_count=Count('likes')) \
+            .order_by('-like_count')[:10]
+        
+        playlists = Playlist.objects.filter(title__icontains=query) \
+            .annotate(like_count=Count('likes')) \
+            .order_by('-like_count')[:10]
+        
+        profiles = Profile.objects.filter(fullName__icontains=query) \
+            .annotate(follower_count=Count('followers')) \
+            .order_by('-follower_count')[:10]
+
+        songs_serializer = SongSerializer(songs, many=True)
+        playlists_serializer = PlaylistSerializer(playlists, many=True)
+        profiles_serializer = ProfileSerializer(profiles, many=True)
+
+
+        data = {
+            'songs': songs_serializer.data,
+            'playlists': playlists_serializer.data,
+            'profiles': profiles_serializer.data,
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
