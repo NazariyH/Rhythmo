@@ -225,6 +225,28 @@ class SearchDataAPIView(APIView):
 
         return Response(data, status=status.HTTP_200_OK)
     
+class RecomendationAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        songs = Song.objects.all() \
+            .annotate(like_count=Count('likes')) \
+            .order_by('-like_count')[:30]
+            
+        profiles = Profile.objects.all() \
+            .annotate(follower_count=Count('followers')) \
+            .order_by('-follower_count')[:15]
+            
+        songs_serializer = SongSerializer(songs, many=True)
+        profiles_serializer = ProfileSerializer(profiles, many=True)
+
+        data = {
+            'songs': songs_serializer.data,
+            'profiles': profiles_serializer.data,
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+    
 
 def downloadSong(requset, id):
     song = get_object_or_404(Song, id=id)

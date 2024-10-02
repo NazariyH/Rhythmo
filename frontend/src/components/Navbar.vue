@@ -556,14 +556,6 @@ div#searchBlock {
 
         background-color: antiquewhite;
 
-        // .download {
-        //     margin: 0 10px !important;
-        // }
-
-        // .like {
-        //     margin-right: 27px !important;
-        // }
-
         .card {
             display: flex;
             justify-content: space-between;
