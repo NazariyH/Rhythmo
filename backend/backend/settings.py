@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'djoser',
     'user',
     'player',
+    'paymentApp',
 ]
 
 MIDDLEWARE = [

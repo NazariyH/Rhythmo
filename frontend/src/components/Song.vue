@@ -58,7 +58,7 @@
                     </button>
                 </div>
 
-                <div class="download">
+                <div v-if="user_is_premium" class="download">
                     <button v-on:click="downloadSong">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-download" viewBox="0 0 16 16">
@@ -153,6 +153,8 @@ export default {
 
             playlists_name: null,
             playlist_choices: null,
+
+            user_is_premium: false,
         }
     },
     methods: {
@@ -348,7 +350,24 @@ export default {
             } catch (error) {
                 console.log(error)
             }
-        }
+        },
+
+        async checkUserPremiumStatus() {
+            const token = localStorage.getItem('token')
+            if (!token) return
+
+            try {
+                const response = await axios.get('payment-process/', {
+                    headers: {
+                        'Authorization': `Token ${token}`
+                    }
+                })
+
+                this.user_is_premium = response.data.is_premium
+            } catch (error) {
+                console.log(error)
+            }
+        },
     },
     mounted() {
         this.song_url = `${this.$store.getters.getBaseURL}${this.song.song}`
@@ -361,6 +380,8 @@ export default {
         this.checkSongReactionStatus().then(() => {
             this.startLikeCountAnimation()
         })
+
+        this.checkUserPremiumStatus()
     },
 }
 </script>

@@ -25,6 +25,8 @@ class Profile(models.Model):
     bio = models.TextField(max_length=900, blank=True, null=True)
     gender = models.CharField(max_length=20, choices=GENDER, default='OTHERS')
 
+    is_premium = models.BooleanField(default=False)
+
     followers = models.ManyToManyField(User, related_name='following', blank=True)
     profileImage = models.ImageField(upload_to='profile_pics', blank=True, null=True)
 

@@ -9,6 +9,7 @@ import AddSongView from '@/views/AddSongView.vue'
 import AddPlaylistView from '@/views/AddPlaylist.vue'
 import PlaylistDetailView from '@/views/PlaylistDetailView.vue'
 import EditPlaylistView from '@/views/EditPlaylistView.vue'
+import Payment from '@/views/Payment.vue'
 
 const routes = [
   {
@@ -28,7 +29,7 @@ const routes = [
   },
   {
     path: '/user/profile/',
-    name: 'user-profile',
+    name: 'current-profile',
     component: OwnProfileView
   },
   {
@@ -60,6 +61,11 @@ const routes = [
     path: '/player/playlist/:id/detail/',
     name: 'playlist-detail',
     component: PlaylistDetailView
+  },
+  {
+    path: '/payment/',
+    name: 'payment',
+    component: Payment
   }
 ]
 
